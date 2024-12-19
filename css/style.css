@@ -1,0 +1,87 @@
+body {
+  font-family: 'Roboto', sans-serif;  /* A more modern sans-serif font */
+  background-color: #f4f4f4; /* Light background color */
+  color: #333; /* Dark text color */
+  line-height: 1.6; /* Improved readability */
+}
+
+.container {
+  width: 80%;
+  margin: 50px auto; /* Increased top/bottom margin */
+  padding: 30px;
+  background-color: #fff; /* White background for the container */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333; /* Darker heading color */
+}
+
+.input-group {
+  display: flex;  /* Use flexbox for better control */
+  align-items: center;  /* Align items vertically in the center */
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold; /* Bolder labels */
+}
+
+input[type="text"] {
+  width: 70%;  /* Adjust the width as needed */
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin-right: 10px; /* Add some space between the input and button */
+}
+
+#suggestions-prix {
+  position: absolute;
+  z-index: 1; /* Assurez-vous que les suggestions sont au-dessus des autres éléments */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#suggestions-prix li {
+  padding: 5px;
+  cursor: pointer;
+}
+
+#suggestions-prix li:hover {
+  background-color: #f0f0f0;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 15px; /* Reduced padding */
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.create-button {
+  display: block;
+  width: 100%;
+  margin-top: 30px;
+  font-size: 18px; /* Larger font size */
+  background-color: #28a745; /* Green button color */
+}
+
+.create-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
