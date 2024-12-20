@@ -2,34 +2,37 @@
 const createButton = document.querySelector('.create-button');
 const prixInput = document.getElementById('prix');
 const prixSuggestions = document.getElementById('suggestions-prix');
+const homeButton  = document.getElementById('homeButton');
+const findMovieButton = document.getElementById('findMovieButton');
 
-createButton.addEventListener('click', () => {
-    // Construct the Google search URL
-    const searchUrl = `https://www.google.com/search?q=bonjour`;
 
-    // Open the search URL in a new tab/window
-    window.open(searchUrl, '_blank');
+
+homeButton.addEventListener('click', () => {
+  window.location.href = 'home.html';
 });
+
+findMovieButton.addEventListener('click', () => {
+  window.location.href = 'index.html';
+})
 
 prixInput.addEventListener('input', () => {
-    const searchTerm = prixInput.value;
+  const searchTerm = prixInput.value;
 
-    // Envoyez une requête AJAX au serveur
-    fetch(`/suggestions?q=${searchTerm}`)
-        .then(response => response.json())
-        .then(suggestions => {
-            // Effacez les suggestions précédentes
-            prixSuggestions.innerHTML = '';
+  // Envoyez une requête AJAX au serveur
+  fetch(`/suggestions?q=${searchTerm}`)
+    .then(response => response.json())
+    .then(suggestions => {
+      // Effacez les suggestions précédentes
+      prixSuggestions.innerHTML = '';
 
-            suggestions.forEach(suggestion => {
-                const li = document.createElement('li');
-                li.textContent = suggestion;
-                li.addEventListener('click', () => {
-                    prixInput.value = suggestion;
-                    prixSuggestions.innerHTML = '';
-                });
-                prixSuggestions.appendChild(li);
-            });
+      suggestions.forEach(suggestion => {
+        const li = document.createElement('li');
+        li.textContent = suggestion;
+        li.addEventListener('click', () => {
+          prixInput.value = suggestion;
+          prixSuggestions.innerHTML = '';
         });
+        prixSuggestions.appendChild(li);
+      });
+    });
 });
-

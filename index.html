@@ -5,27 +5,38 @@
   <title>Configuration de l'algorithme</title>
   <link rel="stylesheet" href="css/style.css"> </head>
 <body>
-<div class="container">
-  <h1>Crée ta liste de visionnement!</h1>
 
-  <div class="input-group">
-    <label for="prix">Choisit un prix</label>
-    <input type="text" id="prix" name="prix">
-    <ul id="suggestions-prix"></ul>
-    <button>search</button>
-    <select>
-      <option value="option1">Option 1</option>
-    </select>
-  </div>
-
-  <div class="input-group">
-    <label for="acteur">Choisit un acteur </label>
-    <input type="text" id="acteur" name="acteur">
-    <button>search</button>
-  </div>
-
+<div class="button-bar">
+  <button id="homeButton">Home</button>
+  <button id="accountButton">Account</button>
+  <button id="settingsButton">Settings</button>
 </div>
-<button class="create-button">Création de l'algorithme</button>
+
+
+<h1>New Algorithm</h1>
+
+
+
+  <div class="container">
+
+    <label for="award">Choose an award </label>
+    <input type="text" id="award" name="award" placeholder="Academy Awards...">
+
+    <label for="acteur">Choose an actor you like </label>
+    <input type="text" id="acteur" name="acteur">
+
+    <label for="genre">Choose a genre you'd like to discovers classics of </label>
+    <input type="text" id="genre" name="genre">
+
+    <label for="localDirector">Choose a director of your country </label>
+    <input type="text" id="localDirector" name="director">
+
+    <label for="filmmaker">Choose a renown filmmaker  </label>
+    <input type="text" id="filmmaker" name="filmmaker">
+
+    <input type="submit" value="Algorithm creation">
+
+  </div>
 </div>
 
 <script src="script.js"></script> </body>

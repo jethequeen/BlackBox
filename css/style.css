@@ -1,7 +1,7 @@
 body {
   font-family: 'Roboto', sans-serif;  /* A more modern sans-serif font */
-  background-color: #f4f4f4; /* Light background color */
-  color: #333; /* Dark text color */
+  background-color: #101211; /* Light background color */
+  color: #e0e0e6; /* Dark text color */
   line-height: 1.6; /* Improved readability */
 }
 
@@ -9,7 +9,7 @@ body {
   width: 80%;
   margin: 50px auto; /* Increased top/bottom margin */
   padding: 30px;
-  background-color: #fff; /* White background for the container */
+  background-color: #101211; /* White background for the container */
   border-radius: 5px; /* Rounded corners */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
@@ -17,7 +17,7 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333; /* Darker heading color */
+  color: #e8e3e3; /* Darker heading color */
 }
 
 .input-group {
@@ -33,12 +33,13 @@ label {
 }
 
 input[type="text"] {
-  width: 70%;  /* Adjust the width as needed */
-  padding: 8px;
+  width: 30%;  /* Adjust the width as needed */
+  padding: 4px;
   border: 1px solid #ddd;
   border-radius: 3px;
   box-sizing: border-box;
-  margin-right: 10px; /* Add some space between the input and button */
+  margin-right: 10px;
+  margin-left: 20px;
 }
 
 #suggestions-prix {
@@ -61,7 +62,7 @@ input[type="text"] {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #435465;
   color: white;
   padding: 8px 15px; /* Reduced padding */
   border: none;
@@ -79,15 +80,16 @@ button:hover {
   width: 100%;
   margin-top: 30px;
   font-size: 18px; /* Larger font size */
-  background-color: #28a745; /* Green button color */
+  background-color: #435465; /* Green button color */
 }
 
 .create-button:hover {
-  background-color: #218838; /* Darker green on hover */
+  background-color: #2c343f; /* Darker green on hover */
 }
 
 img {
   max-width: 100%; /* Ensure images don't exceed their container width */
+  top: 50%;      /* Position halfway down the page */
   height: auto; /* Maintain aspect ratio */
   display: block; /* Prevent image from overflowing its container */
   margin: 20px auto; /* Center the image and add some space around it */
@@ -111,4 +113,66 @@ img {
     width: 100%; /* Make input fields full width */
     margin-bottom: 10px;
   }
+}
+
+#AlgorithmButton {
+  display: block; /* Make the button a block-level element */
+  position: relative;
+  margin: 20px auto; /* Center horizontally, add vertical margin */
+  z-index: 5; /* Ensure button is above image */
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;    /* Center items horizontally */
+}
+
+#AlgorithmButton {
+  order: 1; /* Change the order to position after the image */
+  z-index: 5;
+  position: relative; /* Position relatively within the flex container */
+}
+
+/* Set order for title and image */
+#title {
+  order: 0;
+}
+
+#image {
+  order: 2;
+}
+
+/* Style inputs with type="text", select elements and textareas */
+input[type=text], select, textarea {
+  width: 100%; /* Full width */
+  padding: 12px; /* Some padding */
+  border: 1px solid #ccc; /* Gray border */
+  border-radius: 4px; /* Rounded borders */
+  box-sizing: border-box; /* Make sure that padding and width stays in place */
+  margin-top: 6px; /* Add a top margin */
+  margin-bottom: 16px; /* Bottom margin */
+  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+
+/* Style the submit button with a specific background color etc */
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* When moving the mouse over the submit button, add a darker green color */
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+/* Add a background color and some padding around the form */
+.container {
+  border-radius: 5px;
+  background-color: #101211;
+  padding: 20px;
 }
