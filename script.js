@@ -21,13 +21,12 @@ prixInput.addEventListener('input', () => {
             // Effacez les suggestions précédentes
             prixSuggestions.innerHTML = '';
 
-            // Ajoutez les nouvelles suggestions à la liste
             suggestions.forEach(suggestion => {
                 const li = document.createElement('li');
                 li.textContent = suggestion;
                 li.addEventListener('click', () => {
                     prixInput.value = suggestion;
-                    prixSuggestions.innerHTML = ''; // Effacez la liste après la sélection
+                    prixSuggestions.innerHTML = '';
                 });
                 prixSuggestions.appendChild(li);
             });

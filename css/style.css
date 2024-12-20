@@ -43,7 +43,7 @@ input[type="text"] {
 
 #suggestions-prix {
   position: absolute;
-  z-index: 1; /* Assurez-vous que les suggestions sont au-dessus des autres éléments */
+  z-index: 1;
   background-color: #fff;
   border: 1px solid #ccc;
   list-style: none;
@@ -84,4 +84,31 @@ button:hover {
 
 .create-button:hover {
   background-color: #218838; /* Darker green on hover */
+}
+
+img {
+  max-width: 100%; /* Ensure images don't exceed their container width */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Prevent image from overflowing its container */
+  margin: 20px auto; /* Center the image and add some space around it */
+  border-radius: 5px; /* Add rounded corners (optional) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow (optional) */
+}
+
+/* Example media query for screens smaller than 768px */
+@media (max-width: 768px) {
+  .container {
+    width: 95%; /* Make the container wider on small screens */
+    padding: 20px;
+  }
+
+  .input-group {
+    flex-direction: column; /* Stack input fields vertically */
+    align-items: flex-start;
+  }
+
+  input[type="text"] {
+    width: 100%; /* Make input fields full width */
+    margin-bottom: 10px;
+  }
 }
