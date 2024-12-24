@@ -299,5 +299,51 @@ input[type=submit]:hover {
 
 .grid-item button:hover {
   background-color: #03f481;
+}
 
+
+.settings-container {
+  max-width: 800px;
+  margin: 20px auto; /* Add top/bottom margin */
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.settings-section {
+  margin-bottom: 30px; /* Increase spacing between sections */
+}
+
+.setting-item {
+  margin-bottom: 15px; /* Increase spacing between items */
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold; /* Make labels bold */
+}
+
+.setting-item input[type="checkbox"],
+.setting-item select {
+  margin-right: 10px; /* Add space between checkbox/select and label */
+}
+
+/* Style the "Create Algorithm" button */
+#createAlgoButton {
+  background-color: #4CAF50; /* Green background color */
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add a transition effect */
+}
+
+#createAlgoButton:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
 }

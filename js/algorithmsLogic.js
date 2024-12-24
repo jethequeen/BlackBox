@@ -23,3 +23,4 @@ function setSelectedAlgorithm(algorithmId) {
   // For example, you might store it in local storage:
   localStorage.setItem('selectedAlgorithm', algorithmId);
 }
+
