@@ -2,18 +2,12 @@
 const createButton = document.querySelector('.create-button');
 const prixInput = document.getElementById('prix');
 const prixSuggestions = document.getElementById('suggestions-prix');
-const homeButton  = document.getElementById('homeButton');
 const findMovieButton = document.getElementById('findMovieButton');
-
-
-
-homeButton.addEventListener('click', () => {
-  window.location.href = 'home.html';
-});
 
 findMovieButton.addEventListener('click', () => {
   window.location.href = 'index.html';
-})
+});
+
 
 prixInput.addEventListener('input', () => {
   const searchTerm = prixInput.value;

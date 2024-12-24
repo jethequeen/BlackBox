@@ -5,6 +5,18 @@ body {
   line-height: 1.6; /* Improved readability */
 }
 
+@keyframes fadeInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px); /* Start slightly above */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 .container {
   width: 80%;
   margin: 50px auto; /* Increased top/bottom margin */
@@ -12,6 +24,7 @@ body {
   background-color: #101211; /* White background for the container */
   border-radius: 5px; /* Rounded corners */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  animation: fadeInFromTop 0.3s ease-in-out;
 }
 
 h1 {
@@ -126,17 +139,16 @@ img {
   display: flex;
   flex-direction: column; /* Stack items vertically */
   align-items: center;    /* Center items horizontally */
+  animation: fadeInFromTop 0.3s ease-in-out;
 }
 
-#AlgorithmButton {
+#findMovieButton {
   order: 1; /* Change the order to position after the image */
   z-index: 5;
+  top: 60px;
   position: relative; /* Position relatively within the flex container */
-}
-
-/* Set order for title and image */
-#title {
-  order: 0;
+  padding: 20px 30px;
+  font-size: 18px;
 }
 
 #image {
@@ -176,3 +188,4 @@ input[type=submit]:hover {
   background-color: #101211;
   padding: 20px;
 }
+
