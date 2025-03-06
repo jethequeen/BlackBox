@@ -14,22 +14,43 @@
   <button id="settingsButton">Settings</button>
 </div>
 
-<h1 id="movie-title">Loading...</h1>
+<div class="search-container">
+  <input type="text" id="search-bar" placeholder="Search by director or actor..." oninput="showSuggestions()">
+  <div id="suggestions" class="suggestions-dropdown"></div>
+
+  <select id="role-selector">
+    <option value="auto" selected>Auto</option>
+    <option value="actor">Actor</option>
+    <option value="director">Director</option>
+  </select>
+
+  <button onclick="searchMovie()">Search</button>
+  <button id="random-movie-btn" onclick="fetchRandomMovie()">🎲 Get Random Movie</button>
+</div>
+
 
 <div class="movie-container">
-  <img id="movie-poster" src="" alt="Movie Poster">
-  <div class="movie-info">
-    <p><strong>Année :</strong> <span id="movie-year"></span></p>
-    <p><strong>Réalisateur :</strong> <span id="movie-director"></span></p>
-    <p><strong>Durée :</strong> <span id="movie-runtime"></span> min</p>
-    <p><strong>Pays :</strong> <span id="movie-country"></span></p>
+  <div id="movie-info">
+    <h1 id="movie-title">Search for a movie</h1>
+
+    <!-- ✅ Wrap poster and arrows in a flexbox -->
+    <div class="poster-container">
+      <button id="prev-movie" onclick="prevMovie()">⬅</button>
+      <img id="movie-poster" src="img/default-movie-poster.jpg" alt="Movie Poster">
+      <button id="next-movie" onclick="nextMovie()">➡</button>
+    </div>
+
+    <p>Year: <span id="movie-year"></span></p>
+    <p>Director: <span id="movie-director"></span></p>
+    <p>Runtime: <span id="movie-runtime"></span> min</p>
+    <p>Country: <span id="movie-country"></span></p>
+    <div id="actors-container"></div>
   </div>
 </div>
 
-<h2>Acteurs</h2>
-<div id="actors-container"></div>
 
-<button onclick="fetchRandomMovie()">Get Another Movie</button>
+
+
 
 <script src="js/tmdb.js"></script>
 <script src="js/database.js"></script>
