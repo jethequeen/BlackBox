@@ -8,7 +8,7 @@ const selectedAlgorithm = document.getElementById('selectedAlgorithm');
 const algorithmDropdown = document.getElementById('algorithmDropdown');
 
 findMovieButton.addEventListener('click', () => {
-  window.location.href = '../html/movie.html';
+  window.location.href = '../movie.html';
 });
 
 

@@ -237,7 +237,7 @@ input[type=submit]:hover {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.8);
   z-index: 10;
 }
 
@@ -347,3 +347,131 @@ input[type=submit]:hover {
 #createAlgoButton:hover {
   background-color: #45a049; /* Slightly darker green on hover */
 }
+
+.movie-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.movie-container img {
+  width: 250px;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.movie-info p {
+  font-size: 18px;
+}
+
+#actors-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.actor {
+  text-align: center;
+}
+
+.actor img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+/* 🌌 Arrière-plan global */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;  /* Noir élégant */
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🎬 Titre du film */
+h1 {
+  font-size: 2.5rem;
+  margin-top: 20px;
+}
+
+/* 🎞️ Conteneur principal */
+.movie-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* 🎥 Affichage du poster */
+#movie-poster {
+  width: 250px;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* 📜 Infos du film */
+.movie-info {
+  text-align: left;
+}
+
+.movie-info p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+/* 🌟 Conteneur des acteurs */
+#actors-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* 🎭 Style des acteurs */
+.actor {
+  text-align: center;
+  width: 120px;
+}
+
+.actor img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Rend l'image circulaire */
+  border: 3px solid #435465;
+
+  .actor p {
+    margin-top: 5px;
+    font-size: 0.9rem;
+  }
+
+  /* 📱 Responsive (mobile) */
+  @media screen and (max-width: 600px) {
+    .movie-container {
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+    }
+
+    #movie-poster {
+      width: 200px;
+    }
+
+    .actor img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .actor {
+      width: 90px;
+    }
+  }
+}
+

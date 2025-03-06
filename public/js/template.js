@@ -13,38 +13,38 @@ const oneRule = document.getElementById('oneRuleButton');
 
 
 fiveRules.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 tenRules.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 discovery.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 oneSize.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 patriotic.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 awardsDriven.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 ThirstWatch.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 Letterboxd.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 
 oneRule.addEventListener('click', () => {
-  window.location.href = '../html/index.html';
+  window.location.href = '../index.html';
 })
 

@@ -7,13 +7,13 @@ const algorithmButton = document.getElementById('algorithmButton');
 
 
 homeButton.addEventListener('click', () => {
-  window.location.href = '../html/home.html';
+  window.location.href = '../home.html';
 });
 
 settingsButton.addEventListener('click', () => {
-  window.location.href = '../html/settings.html';
+  window.location.href = '../settings.html';
 });
 
 algorithmButton.addEventListener('click', () => {
-  window.location.href = '../html/algorithms.html';
+  window.location.href = '../algorithms.html';
 });

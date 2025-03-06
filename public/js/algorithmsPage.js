@@ -3,7 +3,7 @@ const algorithmButtonsContainer = document.getElementById('algorithmButtonsConta
 const newAlgorithmButton = document.getElementById('newAlgorithmButton');
 
 newAlgorithmButton.addEventListener('click', () => {
-  window.location.href = '../html/template.html';
+  window.location.href = '../template.html';
 })
 
 // Function to create a button element

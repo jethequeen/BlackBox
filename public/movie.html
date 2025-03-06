@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Details</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="button-bar">
+  <button id="homeButton">Home</button>
+  <button id="algorithmButton">Algorithms</button>
+  <button id="settingsButton">Settings</button>
+</div>
+
+<h1 id="movie-title">Loading...</h1>
+
+<div class="movie-container">
+  <img id="movie-poster" src="" alt="Movie Poster">
+  <div class="movie-info">
+    <p><strong>Année :</strong> <span id="movie-year"></span></p>
+    <p><strong>Réalisateur :</strong> <span id="movie-director"></span></p>
+    <p><strong>Durée :</strong> <span id="movie-runtime"></span> min</p>
+    <p><strong>Pays :</strong> <span id="movie-country"></span></p>
+  </div>
+</div>
+
+<h2>Acteurs</h2>
+<div id="actors-container"></div>
+
+<button onclick="fetchRandomMovie()">Get Another Movie</button>
+
+<script src="js/tmdb.js"></script>
+<script src="js/database.js"></script>
+<script src="js/navigation.js"></script>
+
+</body>
+</html>
