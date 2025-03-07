@@ -188,11 +188,13 @@ app.get("/search-suggestions", (req, res) => {
   });
 });
 
-// API route to trigger the update script and rebuild Docker
+// API route to trigger the update batch file
 app.post("/run-update", (req, res) => {
   console.log("🔄 Running update batch file...");
 
-  exec("cmd /c update.bat", (error, stdout, stderr) => {
+  const batchFilePath = path.join(__dirname, "update.bat"); // ✅ Ensure correct path
+
+  exec(`cmd /c "${batchFilePath}"`, (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
