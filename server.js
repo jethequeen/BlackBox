@@ -191,14 +191,10 @@ app.get("/search-suggestions", (req, res) => {
   });
 });
 
-// API route to trigger the update script on the host machine
 app.post("/run-update", (req, res) => {
   console.log("🔄 Running update script on the host machine...");
 
-  const scriptPath = "C:/BlackBox/update.sh";
-
-  exec("powershell.exe -Command C:/BlackBox/update.sh", (error, stdout, stderr) => {
-
+  exec('powershell.exe -Command "Start-Process -NoNewWindow -FilePath C:\\BlackBox\\update.sh"', (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
@@ -207,7 +203,6 @@ app.post("/run-update", (req, res) => {
     res.json({ success: true, message: "Update started successfully!", output: stdout });
   });
 });
-
 
 
 
