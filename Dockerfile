@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN chmod 777 /app/database.db
+
 # Copy the entire project into the container
 COPY . .
 
