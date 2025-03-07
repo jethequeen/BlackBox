@@ -194,7 +194,7 @@ app.post("/run-update", (req, res) => {
 
   const batchFilePath = path.join(__dirname, "update.sh"); // ✅ Ensure correct path
 
-  exec(`cmd /c "${batchFilePath}"`, (error, stdout, stderr) => {
+  exec("sh /app/update.sh", (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
