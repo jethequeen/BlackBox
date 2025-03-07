@@ -54,7 +54,6 @@ app.get("/random-movie", (req, res) => {
       return;
     }
 
-    console.log("Film sélectionné :", row);
     res.json(row);
   });
 });
@@ -67,7 +66,6 @@ app.get("/search-movie", (req, res) => {
     return res.status(400).json({ error: "No search query provided" });
   }
 
-  console.log(`🔍 Searching for: ${searchQuery} (Role: ${role})`);
 
   // ✅ Auto-detect whether person is more often an actor or director
   if (role === "auto") {
@@ -88,14 +86,11 @@ app.get("/search-movie", (req, res) => {
         return;
       }
 
-      console.log(`🎭 Actor count: ${row.actor_count}, 🎬 Director count: ${row.director_count}`);
-
       let detectedRole = "actor"; // Default to actor
       if (row.director_count > row.actor_count) {
         detectedRole = "director";
       }
 
-      console.log(`✅ Auto-detected role: ${detectedRole}`);
       return searchMoviesByRole(searchQuery, detectedRole, res);
     });
   } else {
@@ -139,8 +134,6 @@ function searchMoviesByRole(searchQuery, role, res) {
       return;
     }
 
-    console.log("🎬 Found movies:", rows); // Debugging log
-
     if (!rows.length) {
       res.status(404).json({ error: "No matching movies found" });
       return;
@@ -152,29 +145,49 @@ function searchMoviesByRole(searchQuery, role, res) {
 
 
 
-// API for autocomplete suggestions
 app.get("/search-suggestions", (req, res) => {
-  const searchQuery = req.query.q;
+  const searchQuery = req.query.q.trim();
+
   if (!searchQuery) {
     return res.status(400).json({ error: "No search query provided" });
   }
 
+
   const sql = `
-    SELECT DISTINCT Name FROM Crew WHERE Name LIKE ?
-    UNION
-    SELECT DISTINCT Name FROM "Cast" WHERE Name LIKE ?
-    ORDER BY Name
+    SELECT Name, MAX(Popularity) AS max_popularity FROM (
+                                                          SELECT "Cast".Name, "Cast".Popularity
+                                                          FROM "Cast"
+                                                          WHERE "Cast".Name LIKE ?
+                                                          UNION
+                                                          SELECT Crew.Name, Crew.Popularity
+                                                          FROM Crew
+                                                          WHERE Crew.Name LIKE ? AND Crew.TMDB_ID IN (
+                                                            SELECT CrewTMDB_ID FROM FilmCrew WHERE FilmCrew.Job = 'Director'
+                                                          )
+                                                        ) AS People
+    GROUP BY Name
+    ORDER BY max_popularity DESC
     LIMIT 10;
   `;
 
   db.all(sql, [`%${searchQuery}%`, `%${searchQuery}%`], (err, rows) => {
     if (err) {
+      console.error("❌ SQL Error in /search-suggestions:", err.message);
       res.status(500).json({ error: err.message });
       return;
     }
-    res.json(rows.map(row => row.Name));
+
+
+    if (!rows.length) {
+      res.status(404).json({ error: "No matching names found" });
+      return;
+    }
+
+    res.json(rows.map(row => row.Name)); // Return only names
   });
 });
+
+
 
 
 

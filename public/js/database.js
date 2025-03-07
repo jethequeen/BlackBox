@@ -228,3 +228,17 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchRandomMovie();
   updateNavButtons();
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("search-bar");
+  const suggestionsContainer = document.getElementById("suggestions");
+
+  document.getElementById("suggestions").addEventListener("click", function (event) {
+    if (event.target.classList.contains("suggestion-item")) {
+      searchInput.value = event.target.innerText; // Set input field
+      searchMovie(); // Trigger search immediately
+      suggestionsContainer.style.display = "none"; // Hide dropdown
+    }
+  });
+});
