@@ -188,13 +188,11 @@ app.get("/search-suggestions", (req, res) => {
   });
 });
 
-// API route to trigger the update batch file
+// API route to trigger the update script on the host machine
 app.post("/run-update", (req, res) => {
-  console.log("🔄 Running update batch file...");
+  console.log("🔄 Running update script on the host machine...");
 
-  const batchFilePath = path.join(__dirname, "update.sh"); // ✅ Ensure correct path
-
-  exec("sh /app/update.sh", (error, stdout, stderr) => {
+  exec("sh ../update.sh", (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
@@ -203,6 +201,7 @@ app.post("/run-update", (req, res) => {
     res.json({ success: true, message: "Update started successfully!", output: stdout });
   });
 });
+
 
 
 
