@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define database paths (use quotes for spaces)
-DB_PATH="/k/My Drive/Base de Donnees.sqlite"
+DB_PATH="/k/My Drive/DB.sqlite"
 BACKUP_DIR="/c/BlackBox/"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BACKUP_FILE="$BACKUP_DIR/Base_de_Donnees_$TIMESTAMP.sqlite"
+BACKUP_FILE="$BACKUP_DIR/DB.sqlite"
 
 # Ensure the backup directory exists
 if [ ! -d "$BACKUP_DIR" ]; then
