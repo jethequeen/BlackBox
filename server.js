@@ -25,6 +25,14 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+db.run("PRAGMA journal_mode=WAL;", (err) => {
+  if (err) {
+    console.error("❌ Could not enable WAL mode:", err.message);
+  } else {
+    console.log("✅ WAL mode enabled for better performance");
+  }
+});
+
 
 // Différentes routes
 
