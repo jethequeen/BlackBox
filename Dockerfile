@@ -13,7 +13,10 @@ RUN npm install
 # Copy the entire project into the container
 COPY . .
 
-# Give execution permissions to update.sh
+# Copy the update script into the container
+COPY update.sh /BlackBox/update.sh
+
+# Give it execution permissions
 RUN chmod +x /app/update.sh
 
 # Expose the port your app runs on
