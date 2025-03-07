@@ -197,7 +197,7 @@ app.post("/run-update", (req, res) => {
 
   const scriptPath = "C:/BlackBox/update.sh";
 
-  exec("sh /app/update.sh", (error, stdout, stderr) => {
+  exec("C:/BlackBox/update.sh", (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
