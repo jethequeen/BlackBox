@@ -19,7 +19,4 @@ algorithmButton.addEventListener('click', () => {
   window.location.href = '../algorithms.html';
 });
 
-adminButton.addEventListener('click', () => {
-  window.location.href = '../update.html'
-});
 

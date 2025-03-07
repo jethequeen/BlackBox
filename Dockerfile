@@ -13,7 +13,7 @@ RUN npm install
 # Copy the entire project into the container
 COPY . .
 
-# Give it execution permissions
+# Give execution permissions to update.sh
 RUN chmod +x /app/update.sh
 
 # Expose the port your app runs on

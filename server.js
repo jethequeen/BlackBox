@@ -25,6 +25,14 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+db.run("PRAGMA journal_mode=WAL;", (err) => {
+  if (err) {
+    console.error("❌ Could not enable WAL mode:", err.message);
+  } else {
+    console.log("✅ WAL mode enabled for better performance");
+  }
+});
+
 
 // Différentes routes
 
@@ -190,22 +198,6 @@ app.get("/search-suggestions", (req, res) => {
     res.json(rows.map(row => row.Name)); // Return only names
   });
 });
-
-app.post("/run-update", (req, res) => {
-  console.log("🔄 Running update script on the host machine...");
-
-  exec('powershell.exe -Command "Start-Process -NoNewWindow -FilePath C:\\BlackBox\\update.sh"', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`❌ Update failed: ${error.message}`);
-      return res.status(500).json({ success: false, message: "Update failed", error: error.message });
-    }
-    console.log(`✅ Update output: ${stdout}`);
-    res.json({ success: true, message: "Update started successfully!", output: stdout });
-  });
-});
-
-
-
 
 
 
