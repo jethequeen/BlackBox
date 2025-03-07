@@ -2,6 +2,7 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 const path = require("path");
+const { exec } = require("child_process");
 
 const app = express();
 const PORT = 3000;
@@ -187,6 +188,19 @@ app.get("/search-suggestions", (req, res) => {
   });
 });
 
+// API route to trigger the update script and rebuild Docker
+app.post("/run-update", (req, res) => {
+  console.log("🔄 Running update batch file...");
+
+  exec("cmd /c update.bat", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`❌ Update failed: ${error.message}`);
+      return res.status(500).json({ success: false, message: "Update failed", error: error.message });
+    }
+    console.log(`✅ Update output: ${stdout}`);
+    res.json({ success: true, message: "Update started successfully!", output: stdout });
+  });
+});
 
 
 

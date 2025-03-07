@@ -3,6 +3,7 @@
 const homeButton  = document.getElementById('homeButton');
 const settingsButton = document.getElementById('settingsButton');
 const algorithmButton = document.getElementById('algorithmButton');
+const adminButton = document.getElementById('adminButton');
 
 
 
@@ -17,3 +18,8 @@ settingsButton.addEventListener('click', () => {
 algorithmButton.addEventListener('click', () => {
   window.location.href = '../algorithms.html';
 });
+
+adminButton.addEventListener('click', () => {
+  window.location.href = '../update.html'
+});
+
