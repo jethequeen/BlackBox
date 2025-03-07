@@ -1,5 +1,5 @@
 #!/bin/bash
-git pull origin master
+git pull origin main
 
 docker stop blackbox-container
 docker rm blackbox-container

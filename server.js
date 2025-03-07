@@ -192,7 +192,7 @@ app.get("/search-suggestions", (req, res) => {
 app.post("/run-update", (req, res) => {
   console.log("🔄 Running update batch file...");
 
-  const batchFilePath = path.join(__dirname, "update.bat"); // ✅ Ensure correct path
+  const batchFilePath = path.join(__dirname, "update.sh"); // ✅ Ensure correct path
 
   exec(`cmd /c "${batchFilePath}"`, (error, stdout, stderr) => {
     if (error) {
