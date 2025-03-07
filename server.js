@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public", {index: "home.html"}));
 
 // Connexion à la base de données SQLite
-const db = new sqlite3.Database("./Base de Donnees.sqlite", (err) => {
+const db = new sqlite3.Database("C:/BlackBox/BlackBox Database/Base De Donnees.sqlite", (err) => {
   if (err) {
     console.error("Erreur lors de l'ouverture de la base de données:", err.message);
   } else {
