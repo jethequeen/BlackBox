@@ -195,7 +195,7 @@ app.get("/search-suggestions", (req, res) => {
 app.post("/run-update", (req, res) => {
   console.log("🔄 Running update script on the host machine...");
 
-  exec("sh ../update.sh", (error, stdout, stderr) => {
+  exec("sh BlackBox/update.sh", (error, stdout, stderr) => {
     if (error) {
       console.error(`❌ Update failed: ${error.message}`);
       return res.status(500).json({ success: false, message: "Update failed", error: error.message });
