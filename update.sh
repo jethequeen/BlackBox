@@ -3,7 +3,7 @@
 # Define database paths
 HOST_DB="/k/My Drive/DB.sqlite"
 CONTAINER_DB="/app/Base_de_Donnees.sqlite"
-TEMP_MERGED_DB="/c/BlackBox DB/DB_merged.sqlite"
+TEMP_MERGED_DB="/c/BlackBox/DB.sqlite"
 
 # Pull the latest code
 echo "Pulling latest code from repository..."
@@ -13,10 +13,11 @@ git pull origin master
 echo "Merging changes from container and host databases..."
 
 # Create a temporary merged database from the host database
-sqlite3 "$HOST_DB" ".backup '$TEMP_MERGED_DB'"
+docker exec -it blackbox-container sqlite3 "$TEMP_MERGED_DB" ".backup '$TEMP_MERGED_DB'"
+
 
 # Attach both databases and dynamically merge all tables
-sqlite3 "$TEMP_MERGED_DB" <<EOF
+docker exec -i blackbox-container sqlite3 "$TEMP_MERGED_DB" <<EOF
 ATTACH '$CONTAINER_DB' AS container_db;
 PRAGMA foreign_keys = OFF;  -- Temporarily disable foreign keys for safe merging
 BEGIN TRANSACTION;
@@ -50,6 +51,6 @@ docker image prune -f
 
 # Start the new container with the merged database
 echo "Starting new container with merged database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "//k/My Drive/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "/c/Black Box/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
 
 echo "Update completed successfully!"
