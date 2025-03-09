@@ -32,7 +32,7 @@ docker rm blackbox-container
 
 # Rebuild the Docker image
 echo "Rebuilding Docker image..."
-docker build -t blackbox .
+docker build --rm -t blackbox .
 
 # Start the new container with the database inside
 echo "Starting new container with database..."
