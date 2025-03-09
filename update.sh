@@ -20,13 +20,13 @@ docker volume create blackbox_db
 # Check if DB_SOURCE is empty
 if [ -z "$DB_SOURCE" ]; then
     echo "❌ Error: DB_SOURCE is empty. Check if 'K:\My Drive\DB.sqlite' exists!"
-    exit 1
 fi
 
 echo "Using DB_SOURCE: $DB_SOURCE"
 
 # Copy the latest database into Docker volume
-docker run --rm -v blackbox_db:/data -v "$DB_SOURCE:/mnt/k/DB.sqlite" alpine sh -c "cp -f '/mnt/k/DB.sqlite' '/data/DB.sqlite'"
+docker run --rm -v blackbox_db:/data -v "/mnt/k/My Drive/DB.sqlite:/mnt/k/DB.sqlite" alpine sh -c "cp -f '/mnt/k/DB.sqlite' '/data/DB.sqlite'"
+
 
 echo "Starting new container with updated database..."
 docker run -d --restart unless-stopped -p 3000:3000 \
