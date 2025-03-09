@@ -182,16 +182,12 @@ function prevMovie() {
   }
 }
 
-
-
-// ✅ Hide suggestions when clicking outside
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container")) {
     document.getElementById("suggestions").style.display = "none";
   }
 });
 
-// ✅ Ensure the page loads with a random movie
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Page chargée, exécution de fetchRandomMovie()...");
   fetchRandomMovie();
