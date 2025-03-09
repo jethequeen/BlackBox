@@ -3,7 +3,7 @@
 echo "Pulling latest code from repository..."
 git pull origin master
 
-DB_SOURCE="/mnt/k/My Drive/DB.sqlite"
+DB_SOURCE=$(wslpath -a "K:\My Drive\DB.sqlite")
 
 
 echo "Stopping and removing the old Docker container..."
