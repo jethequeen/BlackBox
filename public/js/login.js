@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
     loginContainer.classList.remove("hidden");
   });
 
-  // ✅ Handle Login
   loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
     const username = document.getElementById("login-username").value;
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (response.ok){
       window.location.href = "/";
     } else {
-      console.warn("⚠️ Login failed:", data.error);
+      console.warn("Login failed:", data.error);
       loginError.textContent = data.error;
     }
   });
@@ -68,15 +67,14 @@ document.addEventListener("DOMContentLoaded", function() {
     try {
       const data = JSON.parse(responseText);
       if (response.ok) {
-        console.log("✅ Signup successful. Redirecting to login...");
         alert("Signup successful. Please log in.");
         window.location.href = "/login.html";
       } else {
-        console.warn("⚠️ Signup failed:", data.error);
+        console.warn("Signup failed:", data.error);
         signupError.textContent = data.error;
       }
     } catch (error) {
-      console.error("❌ Error parsing JSON:", error);
+      console.error("Error parsing JSON:", error);
       signupError.textContent = "Unexpected response from the server.";
     }
   });

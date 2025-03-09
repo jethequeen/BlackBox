@@ -3,7 +3,6 @@
 async function authenticateUser(req, res, next) {
   const token = req.cookies.sessionToken;
 
-  // ✅ Allow access to public routes
   const publicRoutes = ["/login.html", "/signup.html", "/api/login", "/api/signup", "/signup", "/logout"];
   if (publicRoutes.includes(req.path) || req.path.startsWith("/public")) {
     return next();
@@ -14,7 +13,6 @@ async function authenticateUser(req, res, next) {
   }
 
   try {
-    // ✅ Verify session from database
     const session = await new Promise((resolve, reject) => {
       global.db.get("SELECT * FROM Sessions WHERE SessionID = ? AND Expiry > CURRENT_TIMESTAMP",
         [token], (err, row) => (err ? reject(err) : resolve(row))
@@ -31,7 +29,7 @@ async function authenticateUser(req, res, next) {
       );
     });
 
-    next(); // ✅ Proceed to protected routes
+    next();
   } catch (error) {
     console.error("Authentication Error:", error);
     return res.redirect("/login.html");
