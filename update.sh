@@ -14,7 +14,7 @@ echo "Ensuring Docker volume exists..."
 docker volume create blackbox_db
 
 echo "Copying the latest database into Docker volume..."
-docker run --rm -v blackbox_db:/data -v "/k/My Drive/DB.sqlite:/tmp/DB.sqlite" alpine sh -c "cp -f /tmp/DB.sqlite /data/DB.sqlite"
+docker run --rm -v blackbox_db:/data -v "/k/My Drive:/mnt/k" alpine sh -c "cp -f '/mnt/k/DB.sqlite' '/data/DB.sqlite'"
 
 echo "Starting new container with updated database..."
 docker run -d --restart unless-stopped -p 3000:3000 \
