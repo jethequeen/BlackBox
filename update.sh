@@ -17,7 +17,7 @@ docker rm blackbox-container
 
 # Rebuild the Docker image
 echo "Rebuilding Docker image..."
-docker build --rm -t blackbox .
+docker build --no-cache -t blackbox .
 
 # Remove dangling images (old unused images labeled <none>)
 echo "Removing unused Docker images..."
@@ -25,6 +25,6 @@ docker image prune -f
 
 # Start the new container with the database inside
 echo "Starting new container with database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "K:/My Drive/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "K:/My Drive/DB.sqlite:/app/DB.sqlite" blackbox
 
 echo "Update completed successfully!"
