@@ -26,6 +26,6 @@ fi
 
 echo "Starting new container with updated database..."
 docker run -d --restart unless-stopped -p 3000:3000 \
-    --name blackbox-container -v blackbox_db:/app blackbox
+    --name blackbox-container -v blackbox_db:/app blackbox node /app/server.js
 
 echo "✅ Update completed successfully!"
