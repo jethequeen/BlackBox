@@ -10,23 +10,7 @@ form {
   margin-bottom: 20px;
 }
 
-input[type="text"] {
-  width: 30%;  /* Adjust the width as needed */
-  padding: 4px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-left: 20px;
-}
 
-
-/* 🆘 Error Message */
-.error-message {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 5px;
-}
 
 /* Example media query for screens smaller than 768px */
 @media (max-width: 768px) {

@@ -11,7 +11,6 @@ router.post("/signup", async (req, res) => {
   console.log("🔹 Received Signup Request:", { username, email });
 
   try {
-    // ✅ Check if user exists
     const existingUser = await new Promise((resolve, reject) => {
       global.db.get("SELECT * FROM Accounts WHERE Username = ? OR Email = ?", [username, email],
         (err, row) => {

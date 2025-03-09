@@ -1,15 +1,22 @@
-/* 🔎 Search Suggestions */
+/* 🔎 Search Suggestions (Appear Below the Search Bar) */
 #suggestions {
-  position: absolute;
+  position: relative;
+  top: 100%; /* ✅ Ensures it appears directly below the input */
+  left: 0;
   width: 100%;
   background: #1e1e1e;
   border: 1px solid #262f37;
   border-top: none;
   max-height: 150px;
-  max-width: 300px;
   overflow-y: auto;
   display: none;
-  z-index: 10;
+  z-index: 1000; /* Ensure it stays above other elements */
+  border-radius: 0 0 5px 5px; /* ✅ Matches input styling */
+}
+
+/* 🔹 Ensure No Gap When Only One Suggestion is Left */
+#suggestions:empty {
+  display: none; /* ✅ Hides dropdown if no suggestions */
 }
 
 .suggestion-item {
@@ -17,6 +24,7 @@
   cursor: pointer;
   color: #ffffff;
   background: #333;
+  text-align: left;
 }
 
 .suggestion-item:hover {
@@ -24,60 +32,61 @@
   color: #121212;
 }
 
-
-/* 🔽 Dropdown */
+/* 🔽 Dropdown Fixes */
 .dropdown {
   position: relative;
-  margin-bottom: 20px;
+  display: inline-block;
+  width: 200px; /* Ensures consistency */
 }
 
-/* Dropdown button */
 .dropbtn {
-  background-color: #4CAF50; /* Example color */
+  background-color: #4CAF50;
   color: white;
   padding: 10px;
   font-size: 16px;
   border: none;
   cursor: pointer;
+  width: 100%;
+  text-align: center;
 }
 
-/* Dropdown content (hidden by default) */
+/* Dropdown content (Fixed Alignment) */
 .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 100%;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.8);
-  z-index: 10;
+  z-index: 1000;
+  left: 50%;
+  transform: translateX(-50%); /* Center the dropdown */
 }
 
-/* Links inside the dropdown */
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  text-align: left;
 }
 
-/* Change color on hover */
 .dropdown-content a:hover {
-  background-color: #f1f1f1
+  background-color: #f1f1f1;
 }
 
 /* Show the dropdown on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
+.dropdown:hover .dropdown-content,
 .dropdown.active .dropdown-content {
   display: block;
 }
 
+/* 📱 Mobile Fixes */
+@media (max-width: 600px) {
+  .dropdown {
+    width: 100%;
+  }
 
-/* Dropdown container */
-.dropdown {
-  position: relative;
-  display: inline-block;
+  .dropdown-content {
+    min-width: 100%;
+  }
 }
-
-

@@ -4,7 +4,7 @@ async function authenticateUser(req, res, next) {
   const token = req.cookies.sessionToken;
 
   // ✅ Allow access to public routes
-  const publicRoutes = ["/login.html", "/signup.html", "/api/login", "/api/signup", "/logout"];
+  const publicRoutes = ["/login.html", "/signup.html", "/api/login", "/api/signup", "/signup", "/logout"];
   if (publicRoutes.includes(req.path) || req.path.startsWith("/public")) {
     return next();
   }

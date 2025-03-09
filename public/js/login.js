@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function() {
   const loginContainer = document.getElementById("login-container");
   const signupContainer = document.getElementById("signup-container");
@@ -9,23 +10,20 @@ document.addEventListener("DOMContentLoaded", function() {
   const loginError = document.getElementById("login-error");
   const signupError = document.getElementById("signup-error");
 
-  if (!loginForm || !signupForm) {
-    console.error("❌ Forms not found in the DOM. Check your HTML!");
-    return;
-  }
-
-  // ✅ Show Signup Form
   showSignup.addEventListener("click", function(event) {
     event.preventDefault();
     loginContainer.style.display = "none";
     signupContainer.style.display = "block";
+    loginContainer.classList.add("hidden");
+    signupContainer.classList.remove("hidden");
   });
 
-  // ✅ Show Login Form
   showLogin.addEventListener("click", function(event) {
     event.preventDefault();
     signupContainer.style.display = "none";
     loginContainer.style.display = "block";
+    signupContainer.classList.add("hidden");
+    loginContainer.classList.remove("hidden");
   });
 
   // ✅ Handle Login
@@ -34,9 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("login-password").value;
 
-    console.log("🔹 Sending login request...", { username });
-
-    const response = await fetch("/login", {
+    const response = await fetch("auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -45,8 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const data = await response.json();
 
-    if (response.ok) {
-      console.log("✅ Login successful. Redirecting...");
+    if (response.ok){
       window.location.href = "/";
     } else {
       console.warn("⚠️ Login failed:", data.error);
@@ -54,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // ✅ Handle Signup
   signupForm.addEventListener("submit", async function(event) {
     event.preventDefault();
     const username = document.getElementById("signup-username").value;
@@ -63,21 +57,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
     console.log("🔹 Sending signup request...", { username, email });
 
-    const response = await fetch("/signup", {  // Change to `/api/signup` if needed
+    const response = await fetch("auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password })
     });
 
-    const data = await response.json();
+    const responseText = await response.text();
 
-    if (response.ok) {
-      console.log("✅ Signup successful. Redirecting to login...");
-      alert("Signup successful. Please log in.");
-      window.location.href = "/login.html";
-    } else {
-      console.warn("⚠️ Signup failed:", data.error);
-      signupError.textContent = data.error;
+    try {
+      const data = JSON.parse(responseText);
+      if (response.ok) {
+        console.log("✅ Signup successful. Redirecting to login...");
+        alert("Signup successful. Please log in.");
+        window.location.href = "/login.html";
+      } else {
+        console.warn("⚠️ Signup failed:", data.error);
+        signupError.textContent = data.error;
+      }
+    } catch (error) {
+      console.error("❌ Error parsing JSON:", error);
+      signupError.textContent = "Unexpected response from the server.";
     }
   });
+
 });

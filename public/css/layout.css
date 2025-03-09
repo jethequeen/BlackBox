@@ -67,15 +67,21 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 🔽 Search Bar Container Fix */
 .search-container {
-  display: flex;
-  flex-wrap: wrap; /* ✅ Ensures proper layout */
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* ✅ Adds space between elements */
+  position: relative; /* ✅ Ensures #suggestions positions relative to it */
   width: 100%;
-  max-width: 500px; /* ✅ Prevents it from getting too large */
-  margin: 20px auto;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+#search-bar {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px 5px 0 0; /* ✅ Matches dropdown */
+  border: 1px solid #262f37;
+  background: #1e1e1e;
+  color: white;
 }
 
 .title-container {
@@ -92,7 +98,6 @@
   text-align: center;
   flex-grow: 1; /* ✅ Allows title to take space while arrows stay on sides */
 }
-
 
 
 /* 📱 Responsive Layout */

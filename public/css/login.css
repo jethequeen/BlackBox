@@ -1,0 +1,68 @@
+/* 🎨 Login & Signup Form Styling */
+#login-container,
+#signup-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent dark background */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeInFromTop 0.3s ease-in-out;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 16px;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+p {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+a {
+  color: #ff4500;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 🔒 Error Message Styling */
+.error-message {
+  color: #ff4c4c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+
+/* 📱 Responsive Design */
+@media (max-width: 600px) {
+  #login-container,
+  #signup-container {
+    width: 90%;
+    padding: 15px;
+  }
+}
+

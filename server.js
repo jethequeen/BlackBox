@@ -39,11 +39,8 @@ const { authenticateUser } = require("./middleware/authMiddleware");
 
 app.use("/auth", authRoutes);
 app.use("/movies", movieRoutes);
-
-// ✅ Protected Routes
 app.use(authenticateUser);
 
-// ✅ Home Route
 app.get("/", (req, res) => {
   if (req.cookies.sessionToken) {
     res.sendFile(path.join(__dirname, "public", "home.html")); // ✅ Go to Home if logged in
@@ -52,7 +49,6 @@ app.get("/", (req, res) => {
   }
 });
 
-// ✅ Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
