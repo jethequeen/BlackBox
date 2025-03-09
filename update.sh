@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# Define database paths (use quotes for spaces)
-DB_PATH="/k/My Drive/DB.sqlite"
-BACKUP_DIR="/c/BlackBox/"
-BACKUP_FILE="$BACKUP_DIR/DB.sqlite"
-
-# Ensure the backup directory exists
-if [ ! -d "$BACKUP_DIR" ]; then
-    mkdir -p "$BACKUP_DIR"
-fi
-
-# Backup the database (use cp instead of rsync for Windows Git Bash)
-echo "Backing up database..."
-cp "$DB_PATH" "$BACKUP_FILE"
-
 # Ensure the copy operation is complete
 sync
 sleep 2  # Optional delay to ensure file is written completely
