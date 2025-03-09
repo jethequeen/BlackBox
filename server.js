@@ -8,15 +8,21 @@ const app = express();
 const PORT = 3000;
 
 
-global.db = new sqlite3.Database(path.join(__dirname, "DB.sqlite"), (err) => {
+const isDocker = process.env.IN_DOCKER || false;
+
+const dbPath = isDocker ? "/app/Base_de_Donnees.sqlite" : path.join(__dirname, "DB.sqlite");
+
+global.db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
   } else {
-    console.log("Connected to SQLite database");
+    console.log(`Connected to SQLite database at ${dbPath}`);
   }
 });
 
+// Enable WAL mode
 global.db.run("PRAGMA journal_mode=WAL;");
+
 
 
 
