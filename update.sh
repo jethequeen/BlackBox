@@ -11,7 +11,7 @@ docker stop blackbox-container
 docker rm blackbox-container
 
 echo "Rebuilding Docker image..."
-docker build -t blackbox .
+docker build --rm -t blackbox .
 
 echo "Ensuring Docker volume exists..."
 docker volume create blackbox_db
