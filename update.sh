@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Define database paths
-HOST_DB="/k/My Drive/DB.sqlite"
+HOST_DB="/K/My Drive/DB.sqlite"
 CONTAINER_DB="/app/Base_de_Donnees.sqlite"
-TEMP_MERGED_DB="/c/BlackBox DB/DB.sqlite"
+TEMP_MERGED_DB="/C/BlackBox DB/DB.sqlite"
 
 # Pull the latest code
 echo "Pulling latest code from repository..."
