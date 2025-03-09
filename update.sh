@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Ensure the copy operation is complete
-sync
-sleep 2  # Optional delay to ensure file is written completely
-
-echo "Backup complete: $BACKUP_FILE"
-
 # Pull the latest code
 echo "Pulling latest code from repository..."
 git pull origin master
@@ -25,6 +19,6 @@ docker image prune -f
 
 # Start the new container with the database inside
 echo "Starting new container with database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "K:/My Drive/DB.sqlite:/app/DB.sqlite" blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "//k/My Drive/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
 
 echo "Update completed successfully!"
