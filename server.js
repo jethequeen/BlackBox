@@ -22,7 +22,7 @@ global.db = new sqlite3.Database(dbPath, (err) => {
 
 
 setInterval(() => {
-  global.db.run("PRAGMA wal_checkpoint(FULL);", (err) => {
+  global.db.run("PRAGMA wal_checkpoint(RESTART);", (err) => {
     if (err) console.error("Error running WAL checkpoint:", err.message);
     else console.log("WAL checkpoint executed on interval.");
   });
