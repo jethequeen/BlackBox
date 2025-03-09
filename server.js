@@ -20,6 +20,13 @@ global.db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+
+// Force SQLite to flush writes to the disk
+global.db.run("PRAGMA wal_checkpoint(FULL);", (err) => {
+  if (err) console.error("Error running WAL checkpoint:", err.message);
+  else console.log("WAL checkpoint executed successfully.");
+});
+
 // Enable WAL mode
 global.db.run("PRAGMA journal_mode=WAL;");
 
