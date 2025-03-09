@@ -51,6 +51,6 @@ docker image prune -f
 
 # Start the new container with the merged database
 echo "Starting new container with merged database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "/c/Black Box/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "/c/BlackBox/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
 
 echo "Update completed successfully!"
