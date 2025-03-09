@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Movie Details</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -12,6 +12,7 @@
   <button id="homeButton">Home</button>
   <button id="algorithmButton">Algorithms</button>
   <button id="settingsButton">Settings</button>
+  <button id="signInButton">Sign In</button>
 </div>
 
 <div class="search-container">
@@ -36,7 +37,7 @@
     <!-- ✅ Wrap poster and arrows in a flexbox -->
     <div class="poster-container">
       <button id="prev-movie" onclick="prevMovie()">⬅</button>
-      <img id="movie-poster" src="img/default-movie-poster.jpg" alt="Movie Poster">
+      <img id="movie-poster" src="/img/default-movie-poster.jpg" alt="Movie Poster">
       <button id="next-movie" onclick="nextMovie()">➡</button>
     </div>
 
@@ -52,9 +53,9 @@
 
 
 
-<script src="js/tmdb.js"></script>
-<script src="js/database.js"></script>
-<script src="js/navigation.js"></script>
+<script src="/js/tmdb.js"></script>
+<script src="/js/movie.js"></script>
+<script src="/js/navigation.js"></script>
 
 </body>
 </html>

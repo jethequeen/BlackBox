@@ -1,0 +1,83 @@
+/* 🔎 Search Suggestions */
+#suggestions {
+  position: absolute;
+  width: 100%;
+  background: #1e1e1e;
+  border: 1px solid #262f37;
+  border-top: none;
+  max-height: 150px;
+  max-width: 300px;
+  overflow-y: auto;
+  display: none;
+  z-index: 10;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  color: #ffffff;
+  background: #333;
+}
+
+.suggestion-item:hover {
+  background: #2b95b5;
+  color: #121212;
+}
+
+
+/* 🔽 Dropdown */
+.dropdown {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Dropdown button */
+.dropbtn {
+  background-color: #4CAF50; /* Example color */
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.8);
+  z-index: 10;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+
+/* Show the dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown.active .dropdown-content {
+  display: block;
+}
+
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+

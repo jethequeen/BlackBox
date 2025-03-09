@@ -1,9 +1,12 @@
 
+// ✅ Function to Print Movie Details
 function printMovie(movieDetails) {
   if (!movieDetails || !movieDetails.title) {
     document.getElementById("movie-title").innerText = "Film non trouvé";
     return;
   }
+
+  console.log("🎬 Displaying movie:", movieDetails);
 
   const defaultPoster = "/img/posterPlaceholder.jpg";
   const posterImg = movieDetails.poster && !movieDetails.poster.includes("null")
@@ -20,11 +23,6 @@ function printMovie(movieDetails) {
   const actorsContainer = document.getElementById("actors-container");
   actorsContainer.innerHTML = "";
 
-  if (!movieDetails.actors || !Array.isArray(movieDetails.actors) || movieDetails.actors.length === 0) {
-    console.warn("⚠️ No actors available for this movie:", movieDetails.title);
-    actorsContainer.innerHTML = "<p>No actors available</p>";
-    return;
-  }
 
   movieDetails.actors.forEach(actor => {
     const actorDiv = document.createElement("div");
@@ -43,24 +41,16 @@ function printMovie(movieDetails) {
   });
 }
 
-
-
+// ✅ Fetch Random Movie
 async function fetchRandomMovie() {
   try {
-    const response = await fetch('/random-movie');
-    if (!response.ok) {
-      throw new Error(`❌ Server error: ${response.status}`);
-    }
+    console.log("🔹 Fetching a random movie...");
+
+    const response = await fetch("/movies/random-movie");
 
     const movie = await response.json();
-    console.log("🎬 Received movie from DB:", movie);
 
-    // 🔥 Now using ID instead of title!
     const movieDetails = await getMovieDetails(movie.ID);
-    if (!movieDetails) {
-      document.getElementById("movie-title").innerText = "❌ Movie not found on TMDb";
-      return;
-    }
 
     printMovie(movieDetails);
   } catch (error) {
@@ -70,8 +60,6 @@ async function fetchRandomMovie() {
 }
 
 
-let movieResults = [];
-let currentMovieIndex = 0;
 
 async function searchMovie() {
   const role = document.getElementById("role-selector").value;
@@ -83,13 +71,12 @@ async function searchMovie() {
 
   try {
     const response = await fetch(
-      `/search-movie?q=${encodeURIComponent(query)}&role=${role}`);
+      `movies/search-movie?q=${encodeURIComponent(query)}&role=${role}`);
     if (!response.ok) {
       if (response.status === 404) {
         alert("No movies found for this search.");
         return;
       }
-      throw new Error(`Erreur serveur : ${response.status}`);
     }
 
     movieResults = await response.json();
@@ -124,23 +111,40 @@ async function searchMovie() {
   }
 }
 
+// ✅ Fetch Search Suggestions
+async function showSuggestions() {
+  const query = document.getElementById("search-bar").value.trim();
+  if (query.length < 2) return (document.getElementById("suggestions").style.display = "none");
 
-function nextMovie() {
-  if (currentMovieIndex < movieResults.length - 1) {
-    currentMovieIndex++;
-    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
-    updateNavButtons();
+  try {
+    const response = await fetch(`/movies/search-suggestions?q=${encodeURIComponent(query)}`);
+
+    const suggestions = await response.json();
+    const suggestionsContainer = document.getElementById("suggestions");
+    suggestionsContainer.innerHTML = "";
+
+    if (suggestions.length === 0) {
+      suggestionsContainer.style.display = "none";
+      return;
+    }
+
+    suggestions.forEach(suggestion => {
+      const div = document.createElement("div");
+      div.classList.add("suggestion-item");
+      div.innerText = suggestion;
+      div.onclick = () => {
+        document.getElementById("search-bar").value = suggestion;
+        suggestionsContainer.style.display = "none";
+        searchMovie();
+      };
+      suggestionsContainer.appendChild(div);
+    });
+
+    suggestionsContainer.style.display = "block";
+  } catch (error) {
+    console.error("❌ Error fetching suggestions:", error);
   }
 }
-
-function prevMovie() {
-  if (currentMovieIndex > 0) {
-    currentMovieIndex--;
-    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
-    updateNavButtons();
-  }
-}
-
 
 function updateNavButtons() {
   const prevButton = document.getElementById("prev-movie");
@@ -162,73 +166,36 @@ function updateNavButtons() {
   }
 }
 
-
-
-
-
-
-
-// Show autocomplete suggestions and position dropdown correctly
-async function showSuggestions() {
-  const query = document.getElementById("search-bar").value.trim();
-  if (query.length < 2) {
-    document.getElementById("suggestions").style.display = "none";
-    return;
-  }
-
-  try {
-    const response = await fetch(`/search-suggestions?q=${encodeURIComponent(query)}`);
-    if (!response.ok) throw new Error("Erreur serveur");
-
-    const suggestions = await response.json();
-    const suggestionsContainer = document.getElementById("suggestions");
-    suggestionsContainer.innerHTML = "";
-    validSearchTerms = suggestions;  // Update valid terms
-
-    if (suggestions.length === 0) {
-      suggestionsContainer.style.display = "none";
-      return;
-    }
-
-    suggestions.forEach(suggestion => {
-      const div = document.createElement("div");
-      div.classList.add("suggestion-item");
-      div.innerText = suggestion;
-      div.onclick = () => {
-        document.getElementById("search-bar").value = suggestion;
-        suggestionsContainer.style.display = "none";
-      };
-      suggestionsContainer.appendChild(div);
-    });
-
-    suggestionsContainer.style.display = "block";
-
-    // Position dropdown correctly
-    const searchBar = document.getElementById("search-bar");
-    suggestionsContainer.style.top = `${searchBar.offsetTop + searchBar.offsetHeight}px`;
-    suggestionsContainer.style.left = `${searchBar.offsetLeft}px`;
-    suggestionsContainer.style.width = `${searchBar.offsetWidth}px`;
-  } catch (error) {
-    console.error("Erreur lors de la récupération des suggestions :", error);
+function nextMovie() {
+  if (currentMovieIndex < movieResults.length - 1) {
+    currentMovieIndex++;
+    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
+    updateNavButtons();
   }
 }
 
-// Hide suggestions when clicking outside
+function prevMovie() {
+  if (currentMovieIndex > 0) {
+    currentMovieIndex--;
+    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
+    updateNavButtons();
+  }
+}
+
+
+
+// ✅ Hide suggestions when clicking outside
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".search-container")) {
     document.getElementById("suggestions").style.display = "none";
   }
 });
 
-
-
-// Ensure the page loads with a random movie
+// ✅ Ensure the page loads with a random movie
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Page chargée, exécution de fetchRandomMovie()...");
   fetchRandomMovie();
-  updateNavButtons();
 });
-
 
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search-bar");

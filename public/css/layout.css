@@ -1,0 +1,121 @@
+/* 🎞️ Movie Layout */
+.container {
+  width: 80%;
+  margin: 50px auto; /* Increased top/bottom margin */
+  padding: 30px;
+  background-color: #101211; /* White background for the container */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  animation: fadeInFromTop 0.3s ease-in-out;
+}
+
+/* Add a background color and some padding around the form */
+.container {
+  border-radius: 5px;
+  background-color: #101211;
+  padding: 20px;
+}
+
+/* Home Layout */
+.content-container {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;    /* Center items horizontally */
+  animation: fadeInFromTop 0.3s ease-in-out;
+}
+
+.algorithm-container {  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;    /* Center items horizontally */
+  animation: fadeInFromTop 0.3s ease-in-out;
+  gap: 20px;
+}
+
+.template-container {
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;    /* Center items horizontally */
+  animation: fadeInFromTop 0.3s ease-in-out;
+  gap: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Create 3 equal-width columns */
+  grid-template-rows: repeat(3, 1fr);    /* Create 3 equal-height rows */
+  gap: 20px; /* Add space between grid items */
+}
+
+.grid-item {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  border-radius: 10px; /* Add rounded corners */
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  align-items: center;     /* Center the button vertically */
+
+}
+
+.settings-section {
+  margin-bottom: 30px;
+}
+
+
+.settings-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  display: flex;
+  flex-wrap: wrap; /* ✅ Ensures proper layout */
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* ✅ Adds space between elements */
+  width: 100%;
+  max-width: 500px; /* ✅ Prevents it from getting too large */
+  margin: 20px auto;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#movie-title {
+  font-size: 24px;
+  text-align: center;
+  flex-grow: 1; /* ✅ Allows title to take space while arrows stay on sides */
+}
+
+
+
+/* 📱 Responsive Layout */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+    width: 95%; /* Make the container wider on small screens */
+    padding: 20px;
+  }
+}
+
+/* 📱 Mobile: Force 2 rows of 3 actors */
+@media (max-width: 600px) {
+  #actors-container {
+    grid-template-columns: repeat(3, 1fr); /* ✅ Force 3 columns */
+    grid-template-rows: repeat(2, auto); /* ✅ Force 2 rows */
+  }
+
+  .actor img {
+    width: 100px; /* ✅ Adjust for smaller screens */
+    height: 100px;
+  }
+}
+

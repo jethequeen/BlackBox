@@ -1,0 +1,62 @@
+/* 🌌 Global Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #101211;
+  color: #e0e0e6;
+  line-height: 1.6;
+}
+
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #e8e3e3; /* Darker heading color */
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold; /* Bolder labels */
+}
+
+img {
+  max-width: 100%; /* Ensure images don't exceed their container width */
+  top: 50%;      /* Position halfway down the page */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Prevent image from overflowing its container */
+  margin: 20px auto; /* Center the image and add some space around it */
+  border-radius: 5px; /* Add rounded corners (optional) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow (optional) */
+}
+
+#image {
+  order: 2;
+}
+
+
+#movie-nav {
+  display: flex;
+  justify-content: center; /* ✅ Centers the buttons */
+  align-items: center;
+  gap: 15px; /* ✅ Adds space between buttons */
+  margin-bottom: 20px; /* ✅ Pushes movie info down */
+}
+
+/* 📱 Responsive: Stack elements on small screens */
+@media (max-width: 600px) {
+  .search-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #search-bar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .search-container button {
+    width: 100%; /* ✅ Makes buttons full-width on mobile */
+  }
+}
+
+

@@ -1,0 +1,15 @@
+@keyframes fadeInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px); /* Start slightly above */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🚀 Apply Fade-in Effect */
+.container, .movie-container {
+  animation: fadeInFromTop 0.3s ease-in-out;
+}

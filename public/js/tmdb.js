@@ -1,4 +1,4 @@
-const TMDB_API_KEY = "3d086ca0452b6022e9f3469f336ddbf9"  // Remplace avec ta clé API
+const TMDB_API_KEY = "3d086ca0452b6022e9f3469f336ddbf9"
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 async function getMovieDetails(movieId) {
