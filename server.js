@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public", {index: "home.html"}));
 
 
-const dbPath = path.join(__dirname, "DB.sqlite");
+const dbPath = "/data/DB.sqlite";
 
 // Connexion à la base de données SQLite
 const db = new sqlite3.Database(dbPath, (err) => {
