@@ -12,12 +12,13 @@ docker rm blackbox-container
 echo "Rebuilding Docker image..."
 docker build -t blackbox .
 
-# Check if the database exists before copying
+# Ensure the database exists before copying
 if [ -f "$DB_SOURCE" ]; then
-    echo "Copying the latest database into Docker volume..."
-docker run --rm -v blackbox_db:/data -v "/k/My Drive:/mnt/k" alpine sh -c "cp -f '/mnt/k/DB.sqlite' '/data/DB.sqlite'"
-
-
+    echo "Copying the latest database into Docker container..."
+    docker run -d --name temp-container blackbox sleep 5  # Start a temp container
+    docker cp "$DB_SOURCE" temp-container:/app/DB.sqlite  # Copy the file
+    docker commit temp-container blackbox  # Save the changes
+    docker rm -f temp-container  # Remove temp container
 else
     echo "❌ Error: Source database file ($DB_SOURCE) not found!"
     exit 1
