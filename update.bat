@@ -1,13 +1,5 @@
 @echo off
-cd C:\BlackBox
 git pull origin master
-
-:: Ensure PM2 is running
-pm2 ping >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo PM2 is not running, starting it...
-    pm2 resurrect
-)
 
 :: Check if BlackBox is running
 pm2 describe BlackBox >nul 2>&1
