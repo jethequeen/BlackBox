@@ -16,11 +16,6 @@ git pull origin master
 echo "Copying the database from the running container to $LOCAL_DB..."
 docker cp blackbox-container:/app/Base_de_Donnees.sqlite "$EXTRACTED_DB"
 
-# Ensure the database copy was successful
-if [ ! -f "$EXTRACTED_DB" ]; then
-    echo "ERROR: Failed to copy database from container!"
-    exit 1
-fi
 sync
 # Stop and remove the old container
 echo "Stopping and removing the old Docker container..."
