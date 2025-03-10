@@ -1,57 +1,42 @@
 #!/bin/bash
 
 # Define database paths
-HOST_DB="/K/My Drive/DB.sqlite"
-CONTAINER_DB="/app/Base_de_Donnees.sqlite"
-TEMP_MERGED_DB="/C/BlackBox DB/DB.sqlite"
+HOST_DB="K:/My Drive/DB.sqlite"
+CONTAINER_DB="/tmp/Container_DB.sqlite"
+MERGED_DB="C:/BlackBox/DB.sqlite"
 
-# Pull the latest code
-echo "Pulling latest code from repository..."
-git pull origin master
+echo "Extracting database from running container..."
+docker cp blackbox-container:/app/Base_de_Donnees.sqlite "$CONTAINER_DB"
 
-# Merge changes from both databases **before stopping the container**
-echo "Extracting the latest database from the running container..."
-docker cp blackbox-container:/app/Base_de_Donnees.sqlite /tmp/Container_DB.sqlite
+echo "Merging databases..."
+sqlite3 "$HOST_DB" ".backup '$MERGED_DB'"
 
-echo "Merging changes from container and host databases..."
-
-# Create a temporary merged database from the host database
-sqlite3 "$HOST_DB" ".backup '$TEMP_MERGED_DB'"
-
-# Attach both databases and dynamically merge all tables
-sqlite3 "$TEMP_MERGED_DB" <<EOF
-ATTACH '/tmp/Container_DB.sqlite' AS container_db;
-PRAGMA foreign_keys = OFF;  -- Temporarily disable foreign keys for safe merging
+sqlite3 "$MERGED_DB" <<EOF
+ATTACH '$CONTAINER_DB' AS container;
+PRAGMA foreign_keys = OFF;
 BEGIN TRANSACTION;
-
--- Generate and execute dynamic INSERT queries
-SELECT 'INSERT INTO ' || name || ' SELECT * FROM container_db.' || name ||
-' WHERE NOT EXISTS (SELECT 1 FROM ' || name || ' WHERE rowid = container_db.' || name || '.rowid);'
-FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';
-
+INSERT OR IGNORE INTO Accounts SELECT * FROM container.Accounts;
+INSERT OR IGNORE INTO Films SELECT * FROM container.Films;
+INSERT OR IGNORE INTO Genres SELECT * FROM container.Genres;
+INSERT OR IGNORE INTO Crew SELECT * FROM container.Crew;
+INSERT OR IGNORE INTO Cast SELECT * FROM container.Cast;
+INSERT OR IGNORE INTO Sessions SELECT * FROM container.Sessions;
 COMMIT;
-PRAGMA foreign_keys = ON;  -- Re-enable foreign keys
-DETACH container_db;
+PRAGMA foreign_keys = ON;
+DETACH container;
 EOF
 
-echo "Database merge completed. Copying merged DB back to host location..."
-cp "$TEMP_MERGED_DB" "$HOST_DB"
-
-# Now stop the container AFTER merging is complete
-echo "Stopping and removing the old Docker container..."
+echo "Stopping and removing old container..."
 docker stop blackbox-container
 docker rm blackbox-container
 
-# Rebuild the Docker image
 echo "Rebuilding Docker image..."
 docker build --no-cache -t blackbox .
 
-# Remove dangling images (old unused images labeled <none>)
 echo "Removing unused Docker images..."
 docker image prune -f
 
-# Start the new container with the merged database
 echo "Starting new container with merged database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "//c/BlackBox DB/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v "C:/BlackBox/DB.sqlite:/app/Base_de_Donnees.sqlite" blackbox
 
 echo "Update completed successfully!"
