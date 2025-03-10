@@ -1,5 +1,5 @@
 
-// ✅ Function to Print Movie Details
+
 function printMovie(movieDetails) {
   if (!movieDetails || !movieDetails.title) {
     document.getElementById("movie-title").innerText = "Film non trouvé";
@@ -41,7 +41,6 @@ function printMovie(movieDetails) {
   });
 }
 
-// ✅ Fetch Random Movie
 async function fetchRandomMovie() {
   try {
     console.log("🔹 Fetching a random movie...");
@@ -49,7 +48,6 @@ async function fetchRandomMovie() {
     const response = await fetch("/movies/random-movie");
 
     const movie = await response.json();
-
     const movieDetails = await getMovieDetails(movie.ID);
 
     printMovie(movieDetails);
@@ -58,8 +56,6 @@ async function fetchRandomMovie() {
     document.getElementById("movie-title").innerText = "❌ Error loading movie";
   }
 }
-
-
 
 async function searchMovie() {
   const role = document.getElementById("role-selector").value;
@@ -85,7 +81,6 @@ async function searchMovie() {
       return;
     }
 
-    // ✅ Ensure the first movie is valid before calling printMovie
     currentMovieIndex = 0;
     const firstMovie = movieResults[currentMovieIndex];
 
@@ -95,7 +90,6 @@ async function searchMovie() {
       return;
     }
 
-    // ✅ Fetch TMDb details and display the first movie
     const movieDetails = await getMovieDetails(firstMovie.ID);
     if (!movieDetails) {
       document.getElementById("movie-title").innerText = "Film non trouvé sur TMDb";
@@ -111,39 +105,43 @@ async function searchMovie() {
   }
 }
 
-// ✅ Fetch Search Suggestions
+let debounceTimer;
+
 async function showSuggestions() {
-  const query = document.getElementById("search-bar").value.trim();
-  if (query.length < 2) return (document.getElementById("suggestions").style.display = "none");
+  clearTimeout(debounceTimer); // Clear the previous timer
 
-  try {
-    const response = await fetch(`/movies/search-suggestions?q=${encodeURIComponent(query)}`);
+  debounceTimer = setTimeout(async () => {
+    const query = document.getElementById("search-bar").value.trim();
+    if (query.length < 4) return (document.getElementById("suggestions").style.display = "none");
 
-    const suggestions = await response.json();
-    const suggestionsContainer = document.getElementById("suggestions");
-    suggestionsContainer.innerHTML = "";
+    try {
+      const response = await fetch(`/movies/search-suggestions?q=${encodeURIComponent(query)}`);
+      const suggestions = await response.json();
+      const suggestionsContainer = document.getElementById("suggestions");
+      suggestionsContainer.innerHTML = "";
 
-    if (suggestions.length === 0) {
-      suggestionsContainer.style.display = "none";
-      return;
-    }
-
-    suggestions.forEach(suggestion => {
-      const div = document.createElement("div");
-      div.classList.add("suggestion-item");
-      div.innerText = suggestion;
-      div.onclick = () => {
-        document.getElementById("search-bar").value = suggestion;
+      if (suggestions.length === 0) {
         suggestionsContainer.style.display = "none";
-        searchMovie();
-      };
-      suggestionsContainer.appendChild(div);
-    });
+        return;
+      }
 
-    suggestionsContainer.style.display = "block";
-  } catch (error) {
-    console.error("❌ Error fetching suggestions:", error);
-  }
+      suggestions.forEach(suggestion => {
+        const div = document.createElement("div");
+        div.classList.add("suggestion-item");
+        div.innerText = suggestion;
+        div.onclick = () => {
+          document.getElementById("search-bar").value = suggestion;
+          suggestionsContainer.style.display = "none";
+          searchMovie();
+        };
+        suggestionsContainer.appendChild(div);
+      });
+
+      suggestionsContainer.style.display = "block";
+    } catch (error) {
+      console.error("❌ Error fetching suggestions:", error);
+    }
+  }, 500); // 500ms debounce delay
 }
 
 function updateNavButtons() {
@@ -199,9 +197,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("suggestions").addEventListener("click", function (event) {
     if (event.target.classList.contains("suggestion-item")) {
-      searchInput.value = event.target.innerText; // Set input field
-      searchMovie(); // Trigger search immediately
-      suggestionsContainer.style.display = "none"; // Hide dropdown
+      searchInput.value = event.target.innerText;
+      searchMovie();
+      suggestionsContainer.style.display = "none";
     }
   });
 });

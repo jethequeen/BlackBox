@@ -1,22 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-// ✅ Fetch a Random Movie
 router.get("/random-movie", (req, res) => {
-  console.log("🔹 Fetching a random movie from database...");
-
   global.db.get("SELECT * FROM Films ORDER BY RANDOM() LIMIT 1", [], (err, row) => {
     if (err) {
       console.error("❌ Error fetching random movie:", err.message);
       return res.status(500).json({ error: "Database error" });
     }
-
-    if (!row) {
-      console.warn("⚠️ No movies found in database.");
-      return res.status(404).json({ error: "No movies available" });
-    }
-
-    console.log("✅ Random movie fetched:", row);
     res.json(row);
   });
 });
@@ -43,23 +33,17 @@ router.get("/search-suggestions", (req, res) => {
                                                         ) AS People
     GROUP BY Name
     ORDER BY max_popularity DESC
-    LIMIT 10;
+    LIMIT 5;
   `;
 
   global.db.all(sql, [`%${searchQuery}%`, `%${searchQuery}%`], (err, rows) => {
-    if (err) {
-      console.error("❌ SQL Error in /search-suggestions:", err.message);
-      res.status(500).json({ error: err.message });
-      return;
-    }
-
 
     if (!rows.length) {
       res.status(404).json({ error: "No matching names found" });
       return;
     }
 
-    res.json(rows.map(row => row.Name)); // Return only names
+    res.json(rows.map(row => row.Name));
   });
 });
 
@@ -73,7 +57,6 @@ router.get("/search-movie", (req, res) => {
   }
 
 
-  // ✅ Auto-detect whether person is more often an actor or director
   if (role === "auto") {
     const countQuery = `
       SELECT
