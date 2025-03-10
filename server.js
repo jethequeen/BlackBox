@@ -10,7 +10,7 @@ const PORT = 3000;
 
 const isDocker = process.env.IN_DOCKER || false;
 
-const dbPath = isDocker ? "/app/Base_de_Donnees.sqlite" : path.join(__dirname, "DB.sqlite");
+const dbPath = path.join(__dirname, "DB.sqlite");
 
 global.db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
