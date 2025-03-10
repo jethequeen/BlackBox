@@ -1,5 +1,5 @@
 @echo off
-cd C:\path\to\your\project
+cd C:\BlackBox
 git pull origin master
 npm install
 pm2 delete myserver
