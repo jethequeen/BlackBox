@@ -8,30 +8,15 @@ const app = express();
 const PORT = 3000;
 
 
-const isDocker = process.env.IN_DOCKER || false;
-
-const dbPath = path.join(__dirname, "DB.sqlite");
-
-global.db = new sqlite3.Database(dbPath, (err) => {
+global.db = new sqlite3.Database(path.join(__dirname, "DB.sqlite"), (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
   } else {
-    console.log(`Connected to SQLite database at ${dbPath}`);
+    console.log("Connected to SQLite database");
   }
 });
 
-
-setInterval(() => {
-  global.db.run("PRAGMA wal_checkpoint(RESTART);", (err) => {
-    if (err) console.error("Error running WAL checkpoint:", err.message);
-    else console.log("WAL checkpoint executed on interval.");
-  });
-}, 300000);
-
-
-// Enable WAL mode
 global.db.run("PRAGMA journal_mode=WAL;");
-
 
 
 
