@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# Define database paths
-EXTRACTED_DB="/tmp/Container_DB.sqlite"
-LOCAL_DB="C:/BlackBox DB/DB.sqlite"
+# Define database paths (use quotes for spaces)
+DB_PATH="/k/My Drive/DB.sqlite"
+BACKUP_DIR="/c/BlackBox/"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+BACKUP_FILE="$BACKUP_DIR/DB.sqlite"
+
+echo "Backup complete: $BACKUP_FILE"
 
 # Pull the latest code
 echo "Pulling latest code from repository..."
@@ -17,12 +21,7 @@ if [ ! -f "$EXTRACTED_DB" ]; then
     echo "ERROR: Failed to copy database from container!"
     exit 1
 fi
-
-# Copy the extracted database to the local Windows path
-cp "$EXTRACTED_DB" "$LOCAL_DB"
-
-echo "Database copied successfully!"
-
+sync
 # Stop and remove the old container
 echo "Stopping and removing the old Docker container..."
 docker stop blackbox-container
@@ -30,14 +29,14 @@ docker rm blackbox-container
 
 # Rebuild the Docker image
 echo "Rebuilding Docker image..."
-docker build --no-cache -t blackbox .
+docker build --rm -t blackbox .
 
 # Remove dangling images (old unused images labeled <none>)
 echo "Removing unused Docker images..."
 docker image prune -f
 
-# Start the new container with the copied database
-echo "Starting new container with the copied database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true blackbox
+# Start the new container with the database inside
+echo "Starting new container with database..."
+docker run -d -p 3000:3000 --name blackbox-container -v "$DB_PATH:/app/Base_de_Donnees.sqlite" blackbox
 
 echo "Update completed successfully!"
