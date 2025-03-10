@@ -149,7 +149,7 @@ button:hover {
   width: auto; /* ✅ Prevents stretching */
   max-width: 200px; /* ✅ Ensures consistent size */
   text-align: center;
-  background-color: #00e1ff;
+  background-color: #2b7681;
 }
 
 #random-movie-btn:hover {

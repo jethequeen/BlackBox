@@ -80,7 +80,11 @@
   display: block;
 }
 
-/* 📱 Mobile Fixes */
+#role-selector {
+  max-width: 100px;
+}
+
+
 @media (max-width: 600px) {
   .dropdown {
     width: 100%;

@@ -18,8 +18,7 @@
     <option value="director">Director</option>
   </select>
 
-  <button onclick="searchMovie()">Search</button>
-  <button id="random-movie-btn" onclick="fetchRandomMovie()">🎲 Get Random Movie</button>
+  <button id="random-movie-btn" onclick="fetchRandomMovie()">Get Random Movie</button>
 </div>
 
 
@@ -27,10 +26,9 @@
   <div id="movie-info">
     <h1 id="movie-title">Search for a movie</h1>
 
-    <!-- ✅ Wrap poster and arrows in a flexbox -->
     <div class="poster-container">
       <button id="prev-movie" onclick="prevMovie()">⬅</button>
-      <img id="movie-poster" src="/img/default-movie-poster.jpg" alt="Movie Poster">
+      <img id="movie-poster" src="/img/posterPlaceholder.jpg" alt="Movie Poster">
       <button id="next-movie" onclick="nextMovie()">➡</button>
     </div>
 

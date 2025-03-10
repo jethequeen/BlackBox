@@ -49,8 +49,11 @@ async function fetchRandomMovie() {
 
     const movie = await response.json();
     const movieDetails = await getMovieDetails(movie.ID);
+    currentMovieIndex = 0;
+    movieResults = movie;
 
     printMovie(movieDetails);
+    updateNavButtons();
   } catch (error) {
     console.error("❌ Error fetching movie:", error);
     document.getElementById("movie-title").innerText = "❌ Error loading movie";
@@ -198,7 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("suggestions").addEventListener("click", function (event) {
     if (event.target.classList.contains("suggestion-item")) {
       searchInput.value = event.target.innerText;
-      searchMovie();
       suggestionsContainer.style.display = "none";
     }
   });
