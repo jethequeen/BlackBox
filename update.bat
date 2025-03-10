@@ -22,7 +22,7 @@ IF %ERRORLEVEL% EQU 0 (
 timeout /t 3 /nobreak >> C:\BlackBox\update_log.txt 2>&1
 
 :: Start the server and log the output
-pm2 start server.js --name BlackBox >> C:\BlackBox\update_log.txt 2>&1
+pm2 restart server.js --name BlackBox >> C:\BlackBox\update_log.txt 2>&1
 echo PM2 Start Completed. >> C:\BlackBox\update_log.txt
 
 echo --- Update completed successfully on %DATE% at %TIME% --- >> C:\BlackBox\update_log.txt
