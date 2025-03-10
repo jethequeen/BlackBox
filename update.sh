@@ -38,6 +38,6 @@ docker image prune -f
 
 # Start the new container with the copied database
 echo "Starting new container with the copied database..."
-docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true -v blackbox
+docker run -d -p 3000:3000 --name blackbox-container -e IN_DOCKER=true blackbox
 
 echo "Update completed successfully!"
