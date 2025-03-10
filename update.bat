@@ -1,5 +1,7 @@
 @echo off
+cd C:\BlackBox
 git pull origin master
+
 
 :: Check if BlackBox is running
 pm2 describe BlackBox >nul 2>&1
