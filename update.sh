@@ -6,7 +6,7 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="$BACKUP_DIR/DB.sqlite"
 # Define database paths
 EXTRACTED_DB="/tmp/Container_DB.sqlite"
-LOCAL_DB="C:/BlackBox DB/DB.sqlite"
+LOCAL_DB="C:/BlackBox/DB.sqlite"
 
 # Extract the latest database from the running container **before stopping it**
 echo "Copying the database from the running container to $LOCAL_DB..."
