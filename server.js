@@ -28,11 +28,12 @@ app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
 const authRoutes = require("./routes/auth");
 const movieRoutes = require("./routes/movies");
+const algorithmRoutes = require("./routes/algorithm");
 const { authenticateUser } = require("./middleware/authMiddleware");
-
 
 app.use("/auth", authRoutes);
 app.use("/movies", movieRoutes);
+app.use("/algorithm", algorithmRoutes);
 app.use(authenticateUser);
 
 app.get("/", (req, res) => {

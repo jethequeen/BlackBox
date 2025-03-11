@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Five Rules Algorithm Configuration</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="settings-container">
+  <h1>Algorithm Configuration</h1>
+
+  <div class="settings-section">
+
+    <div class="settings-section">
+      <div class="setting-item">
+        <label for="algoName">Algorithm Name:</label>
+        <input type="text" id="algoName" name="algoName" placeholder="Home cinema picks...">
+      </div>
+    </div>
+
+    <div class="setting-item">
+      <label for="award">Choose an award:</label>
+      <input type="text" id="award" name="award" placeholder="Academy Awards...">
+    </div>
+
+    <div class="setting-item">
+      <label for="acteur">Choose an actor you like:</label>
+      <input type="text" id="acteur" name="acteur" placeholder="Kristen Stewart...">
+    </div>
+
+    <div class="setting-item">
+      <label for="genre">Choose a genre you'd like to discover classics of:</label>
+      <input type="text" id="genre" name="genre" placeholder="Science-fiction...">
+    </div>
+
+    <div class="setting-item">
+      <label for="localDirector">Choose a director from your country:</label>
+      <input type="text" id="localDirector" name="director" placeholder="Denis Villeneuve... (We are Canadians!)">
+    </div>
+
+    <div class="setting-item">
+      <label for="filmmaker">Choose a renowned filmmaker:</label>
+      <input type="text" id="filmmaker" name="filmmaker" placeholder="Ennio Morricone...">
+    </div>
+  </div>
+
+
+
+
+  <div class="settings-section">
+    <div class="setting-item">
+      <label for="decadeRotation">Normal decade rotation:</label>
+      <input type="checkbox" id="decadeRotation" name="checkDecadeRotation">
+    </div>
+
+    <div class="setting-item">
+      <label for="setting2">Setting 2:</label>
+      <select id="setting2" name="setting2">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <label for="setting3">Setting 3:</label>
+      <input type="number" id="setting3" name="setting3" min="0" max="100">
+    </div>
+  </div>
+
+
+  <button id="createAlgoButton" onclick =createAlgorithm() > Create Algorithm </button>
+</div>
+
+<script src="/js/navigation.js"></script>
+<script src="/js/algorithmsLogic.js"></script>
+<script src="/js/algorithmNavigation.js"></script>
+
+</body>
+</html>

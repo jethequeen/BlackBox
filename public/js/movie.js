@@ -43,7 +43,6 @@ function printMovie(movieDetails) {
 
 async function fetchRandomMovie() {
   try {
-    console.log("🔹 Fetching a random movie...");
 
     const response = await fetch("/movies/random-movie");
 
@@ -55,8 +54,8 @@ async function fetchRandomMovie() {
     printMovie(movieDetails);
     updateNavButtons();
   } catch (error) {
-    console.error("❌ Error fetching movie:", error);
-    document.getElementById("movie-title").innerText = "❌ Error loading movie";
+    console.error("Error fetching movie:", error);
+    document.getElementById("movie-title").innerText = "Error loading movie";
   }
 }
 
@@ -64,7 +63,7 @@ async function searchMovie() {
   const role = document.getElementById("role-selector").value;
   const query = document.getElementById("search-bar").value.trim();
   if (!query) {
-    console.warn("⚠️ No search query entered.");
+    console.warn("No search query entered.");
     return;
   }
 
@@ -88,7 +87,7 @@ async function searchMovie() {
     const firstMovie = movieResults[currentMovieIndex];
 
     if (!firstMovie || !firstMovie.Title) {
-      console.error("❌ First movie is invalid:", firstMovie);
+      console.error("First movie is invalid:", firstMovie);
       document.getElementById("movie-title").innerText = "Erreur de chargement";
       return;
     }
@@ -103,7 +102,7 @@ async function searchMovie() {
     updateNavButtons();
 
   } catch (error) {
-    console.error("❌ Error fetching searched movie:", error);
+    console.error("Error fetching searched movie:", error);
     document.getElementById("movie-title").innerText = "Erreur de chargement";
   }
 }
@@ -142,9 +141,9 @@ async function showSuggestions() {
 
       suggestionsContainer.style.display = "block";
     } catch (error) {
-      console.error("❌ Error fetching suggestions:", error);
+      console.error("Error fetching suggestions:", error);
     }
-  }, 500); // 500ms debounce delay
+  }, 250);
 }
 
 function updateNavButtons() {

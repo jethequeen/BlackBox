@@ -4,7 +4,7 @@ const router = express.Router();
 router.get("/random-movie", (req, res) => {
   global.db.get("SELECT * FROM Films ORDER BY RANDOM() LIMIT 1", [], (err, row) => {
     if (err) {
-      console.error("❌ Error fetching random movie:", err.message);
+      console.error("Error fetching random movie:", err.message);
       return res.status(500).json({ error: "Database error" });
     }
     res.json(row);
@@ -70,7 +70,7 @@ router.get("/search-movie", (req, res) => {
 
     global.db.get(countQuery, [searchQuery, searchQuery], (err, row) => {
       if (err) {
-        console.error("❌ SQL Error in /search-movie (Auto Role Detection):", err.message);
+        console.error("SQL Error in /search-movie (Auto Role Detection):", err.message);
         res.status(500).json({ error: err.message });
         return;
       }

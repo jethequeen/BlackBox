@@ -12,37 +12,11 @@ findMovieButton.addEventListener('click', () => {
 });
 
 
-// prixInput.addEventListener('input', () => {
-//   const searchTerm = prixInput.value;
-//
-//   // Envoyez une requête AJAX au serveur
-//   fetch(`/suggestions?q=${searchTerm}`)
-//     .then(response => response.json())
-//     .then(suggestions => {
-//       // Effacez les suggestions précédentes
-//       prixSuggestions.innerHTML = '';
-//
-//       suggestions.forEach(suggestion => {
-//         const li = document.createElement('li');
-//         li.textContent = suggestion;
-//         li.addEventListener('click', () => {
-//           prixInput.value = suggestion;
-//           prixSuggestions.innerHTML = '';
-//         });
-//         prixSuggestions.appendChild(li);
-//       });
-//     });
-// });
-
-
-
 function populateAlgorithmDropdown() {
   getAlgorithmsFromAccount().then(algorithms => {
-      // Clear previous dropdown items
       algorithmDropdown.innerHTML = '';
 
-      if (algorithms && algorithms.length > 0) { // Check if algorithms exist
-        // Add each algorithm to the dropdown
+      if (algorithms && algorithms.length > 0) {
         algorithms.forEach(algorithm => {
           const algorithmItem = document.createElement('a');
           algorithmItem.textContent = algorithm.name;
@@ -54,15 +28,11 @@ function populateAlgorithmDropdown() {
           algorithmDropdown.appendChild(algorithmItem);
         });
       } else {
-        // Handle the case where no algorithms are returned
         console.log("No algorithms found.");
-        // You might want to display a message to the user or
-        // disable the dropdown in this case.
       }
     })
     .catch(error => {
       console.error("Error fetching algorithms:", error);
-      // Handle the error (e.g., display an error message)
     });
 }
 
