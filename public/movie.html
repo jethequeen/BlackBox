@@ -9,7 +9,8 @@
 <body>
 
 <div class="search-container">
-  <input type="text" id="search-bar" placeholder="Search by director or actor..." oninput="showSuggestions()">
+  <input type="text" id="search-bar" placeholder="Search by director or actor..."
+         oninput="showSuggestions('search-bar', 'crew', 'suggestions')">
   <div id="suggestions" class="suggestions-dropdown"></div>
 
   <select id="role-selector">
@@ -38,6 +39,10 @@
     <p>Country: <span id="movie-country"></span></p>
     <div id="actors-container"></div>
   </div>
+
+  <!-- ✅ Add this section to display search results -->
+  <div id="movieList"></div>
+
 </div>
 
 

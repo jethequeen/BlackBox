@@ -14,22 +14,11 @@ router.post("/saveAlgorithm", (req, res) => {
     return res.status(401).json({ error: "User not authenticated (no sessionToken found)" });
   }
 
-  // Query database to get AccountID based on session token
   global.db.get(
     "SELECT AccountID FROM Sessions WHERE SessionID = ?",
     [sessionToken],
     (err, row) => {
-      if (err) {
-        console.error("❌ Database error retrieving session:", err.message);
-        return res.status(500).json({error: "Database error"});
-      }
-      if (!row) {
-        console.error("❌ Error: Invalid session token");
-        return res.status(401).json({error: "Invalid session"});
-      }
-
-      const AccountID = row.AccountID; // Extract AccountID from session row
-      console.log("✅ AccountID retrieved from session:", AccountID);
+      const AccountID = row.AccountID;
 
       global.db.run(
         "INSERT INTO Algorithms (user_id, name) VALUES (?, ?)", // Change user_id → AccountID
@@ -80,8 +69,20 @@ router.post("/saveAlgorithm", (req, res) => {
 
 
 router.get("/getAlgorithms", (req, res) => {
-  global.db.all("SELECT * FROM algorithms", (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
+  const sessionToken = req.cookies.sessionToken;
+
+  if (!sessionToken) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const sqlQuery = `
+    SELECT Algorithms.ID, Algorithms.Name
+    FROM Algorithms
+    JOIN Sessions ON Algorithms.user_id = Sessions.AccountID
+    WHERE Sessions.SessionID = ?
+  `;
+
+  global.db.all(sqlQuery, [sessionToken], (err, rows) => {
     res.json(rows);
   });
 });
@@ -130,6 +131,38 @@ router.get("/recommendMovie/:algorithm_id", (req, res) => {
 router.get("/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
+
+router.get("/getAlgorithmParams", (req, res) => {
+  const { algorithmID } = req.query;
+
+  if (!algorithmID) {
+    return res.status(400).json({ error: "Algorithm ID is required." });
+  }
+
+  const sqlQuery = `
+    SELECT parameter_key AS key, parameter_value AS value
+    FROM AlgorithmParameters
+    WHERE algorithm_id = ?
+  `;
+
+  global.db.all(sqlQuery, [algorithmID], (err, rows) => {
+    if (err) {
+      console.error("❌ Database Error:", err.message);
+      return res.status(500).json({ error: "Database query error." });
+    }
+
+    if (!rows.length) {
+      return res.status(404).json({ error: "No parameters found for this algorithm." });
+    }
+
+    res.json(rows);
+  });
+});
+
+const { FILTER_MAPPING, searchQueryMap } = require("../util/FilterMapping");
+
+
+
 
 
 module.exports = router;

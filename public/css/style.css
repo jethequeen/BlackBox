@@ -7,3 +7,15 @@
 @import url("dropdown.css");
 @import url("animations.css");
 @import url("login.css");
+
+.setting-item-group {
+  display: flex;
+  gap: 15px; /* Space between inputs */
+  align-items: center;
+}
+
+.setting-item-group .setting-item {
+  flex: 1; /* Make both fields take up equal space */
+  display: flex;
+  flex-direction: column;
+}

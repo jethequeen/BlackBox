@@ -1,51 +1,51 @@
 const express = require("express");
 const router = express.Router();
+const {FILTER_MAPPING, searchQueryMap} = require("../util/FilterMapping");
+const { buildQuery } = require("../util/queryBuilder");
 
-router.get("/random-movie", (req, res) => {
-  global.db.get("SELECT * FROM Films ORDER BY RANDOM() LIMIT 1", [], (err, row) => {
-    if (err) {
-      console.error("Error fetching random movie:", err.message);
-      return res.status(500).json({ error: "Database error" });
-    }
-    res.json(row);
-  });
+router.post("/build-query", (req, res) => {
+  try {
+    const filters = req.body.filters; // Frontend sends filters
+    const { query, values } = buildQuery(filters);
+
+    res.json({ query, values });
+  } catch (error) {
+    console.error("❌ Error building query:", error);
+    res.status(500).json({ error: "Failed to generate query." });
+  }
 });
+
+
+
 
 router.get("/search-suggestions", (req, res) => {
-  const searchQuery = req.query.q.trim();
+  let { q, type, award } = req.query;
 
-  if (!searchQuery) {
-    return res.status(400).json({ error: "No search query provided" });
+  let sqlQuery = searchQueryMap[type];
+  let params = [`%${q}%`];
+
+  // ✅ If fetching categories, filter by the selected award
+  if (type === "category" && award) {
+    sqlQuery = searchQueryMap.category;
+    params = [award]; // Pass award name exactly
   }
 
+  console.log(`🔹 Running Query: ${sqlQuery}, Params: ${params}`);
 
-  const sql = `
-    SELECT Name, MAX(Popularity) AS max_popularity FROM (
-                                                          SELECT "Cast".Name, "Cast".Popularity
-                                                          FROM "Cast"
-                                                          WHERE "Cast".Name LIKE ?
-                                                          UNION
-                                                          SELECT Crew.Name, Crew.Popularity
-                                                          FROM Crew
-                                                          WHERE Crew.Name LIKE ? AND Crew.TMDB_ID IN (
-                                                            SELECT CrewTMDB_ID FROM FilmCrew WHERE FilmCrew.Job = 'Director'
-                                                          )
-                                                        ) AS People
-    GROUP BY Name
-    ORDER BY max_popularity DESC
-    LIMIT 5;
-  `;
-
-  global.db.all(sql, [`%${searchQuery}%`, `%${searchQuery}%`], (err, rows) => {
-
-    if (!rows.length) {
-      res.status(404).json({ error: "No matching names found" });
-      return;
+  global.db.all(sqlQuery, params, (err, rows) => {
+    if (err) {
+      console.error("❌ Database Error:", err.message);
+      return res.status(500).json({ error: "Database query error." });
     }
 
-    res.json(rows.map(row => row.Name));
+    console.log(`✅ Search results for '${q}' [${type}]:`, rows);
+    res.json(rows);
   });
 });
+
+
+
+
 
 
 router.get("/search-movie", (req, res) => {
@@ -87,7 +87,6 @@ router.get("/search-movie", (req, res) => {
   }
 });
 
-// ✅ Function to search movies based on detected role
 function searchMoviesByRole(searchQuery, role, res) {
   let sql;
   let params = [searchQuery];
@@ -131,5 +130,26 @@ function searchMoviesByRole(searchQuery, role, res) {
     res.json(rows);
   });
 }
+
+router.post("/fetchMovies", (req, res) => {
+  const { query, values } = req.body;
+
+  if (!query || !values) {
+    return res.status(400).json({ error: "Invalid query parameters." });
+  }
+
+  console.log("Executing SQL Query:", query);
+  console.log("Query Values:", values);
+
+  global.db.all(query, values, (err, rows) => {
+    if (err) {
+      console.error("Database Execution Error:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
+});
+
+
 
 module.exports = router;

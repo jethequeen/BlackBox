@@ -11,43 +11,56 @@
 <div class="settings-container">
   <h1>Algorithm Configuration</h1>
 
-  <div class="settings-section">
-
     <div class="settings-section">
       <div class="setting-item">
         <label for="algoName">Algorithm Name:</label>
-        <input type="text" id="algoName" name="algoName" placeholder="Home cinema picks...">
+        <input type="text" id="algoName" name="algoName" placeholder="Home cinema picks..." >
       </div>
     </div>
 
+  <div class="setting-item-group">
     <div class="setting-item">
       <label for="award">Choose an award:</label>
-      <input type="text" id="award" name="award" placeholder="Academy Awards...">
+      <input type="text" id="award" name="award" placeholder="Academy Awards..."
+             oninput="showSuggestions('award', 'award', 'suggestions-award')">
+      <div id="suggestions-award" class="suggestions-dropdown"></div>
     </div>
 
     <div class="setting-item">
-      <label for="acteur">Choose an actor you like:</label>
-      <input type="text" id="acteur" name="acteur" placeholder="Kristen Stewart...">
-    </div>
-
-    <div class="setting-item">
-      <label for="genre">Choose a genre you'd like to discover classics of:</label>
-      <input type="text" id="genre" name="genre" placeholder="Science-fiction...">
-    </div>
-
-    <div class="setting-item">
-      <label for="localDirector">Choose a director from your country:</label>
-      <input type="text" id="localDirector" name="director" placeholder="Denis Villeneuve... (We are Canadians!)">
-    </div>
-
-    <div class="setting-item">
-      <label for="filmmaker">Choose a renowned filmmaker:</label>
-      <input type="text" id="filmmaker" name="filmmaker" placeholder="Ennio Morricone...">
+      <label for="category">Choose a category:</label>
+      <input type="text" id="category" name="category" placeholder="Best Picture..."
+             oninput="showSuggestions('category', 'category', 'suggestions-category')">
+      <div id="suggestions-category" class="suggestions-dropdown"></div> <!-- Unique ID -->
     </div>
   </div>
 
+      <div class="setting-item">
+        <label for="acteur">Choose an actor you like:</label>
+        <input type="text" id="acteur" name="acteur" placeholder="Kristen Stewart..."
+               oninput="showSuggestions('acteur', 'cast', 'suggestions-acteur')">
+        <div id="suggestions-acteur" class="suggestions-dropdown"></div> <!-- Unique ID -->
+      </div>
 
+      <div class="setting-item">
+        <label for="genre">Choose a genre you'd like to discover classics of:</label>
+        <input type="text" id="genre" name="genre" placeholder="Science-fiction..."
+               oninput="showSuggestions('genre', 'genre', 'suggestions-genre')">
+        <div id="suggestions-genre" class="suggestions-dropdown"></div> <!-- Unique ID -->
+      </div>
 
+      <div class="setting-item">
+        <label for="localDirector">Choose a director from your country:</label>
+        <input type="text" id="localDirector" name="director" placeholder="Denis Villeneuve..."
+               oninput="showSuggestions('localDirector', 'director', 'suggestions-localDirector')">
+        <div id="suggestions-localDirector" class="suggestions-dropdown"></div> <!-- Unique ID -->
+      </div>
+
+      <div class="setting-item">
+        <label for="filmmaker">Choose a renowned filmmaker:</label>
+        <input type="text" id="filmmaker" name="filmmaker" placeholder="Ennio Morricone..."
+               oninput="showSuggestions('filmmaker', 'crew', 'suggestions-filmmaker')">
+        <div id="suggestions-filmmaker" class="suggestions-dropdown"></div> <!-- Unique ID -->
+      </div>
 
   <div class="settings-section">
     <div class="setting-item">
@@ -73,9 +86,11 @@
   <button id="createAlgoButton" onclick =createAlgorithm() > Create Algorithm </button>
 </div>
 
-<script src="/js/navigation.js"></script>
 <script src="/js/algorithmsLogic.js"></script>
+<script src="/js/movie.js"></script>
+<script src="/js/navigation.js"></script>
 <script src="/js/algorithmNavigation.js"></script>
+
 
 </body>
 </html>
