@@ -1,3 +1,6 @@
+// ✅ Fix: Define `currentMovieIndex`
+let currentMovieIndex = 0;
+let movieResults = [];
 
 async function getSQLQuery(filters) {
   try {
@@ -6,6 +9,10 @@ async function getSQLQuery(filters) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ filters }),
     });
+
+    if (!response.ok) {
+      throw new Error(`❌ API Error: ${response.status} ${response.statusText}`);
+    }
 
     const data = await response.json();
     console.log("✅ Generated SQL Query:", data.query, "Values:", data.values);
@@ -41,31 +48,42 @@ async function fetchAlgorithmParams() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const movieList = document.getElementById("movieList");
 
-  // ✅ Fetch algorithm parameters before building the query
+  if (!movieList) {
+    console.error("❌ Error: movieList element not found in movie.html.");
+    return;
+  }
+
+  // ✅ Fetch algorithm parameters
   const parameters = await fetchAlgorithmParams();
+  if (!parameters) {
+    movieList.innerHTML = "<p>Error loading algorithm parameters.</p>";
+    return;
+  }
 
-  // ✅ Convert parameters into filters
   let filters = {};
   parameters.forEach(param => {
     filters[param.key] = param.value;
   });
 
-  // ✅ Fetch query from backend using `/api/build-query`
-  const sqlQuery = await getSQLQuery(filters);
-  if (!sqlQuery) {
+  // ✅ Ensure `getSQLQuery()` is awaited properly
+  const sqlResult = await getSQLQuery(filters);
+  if (!sqlResult) {
+    console.error("❌ Error generating SQL query.");
     movieList.innerHTML = "<p>Error generating SQL query.</p>";
     return;
   }
 
-  console.log("🔍 Running Query:", sqlQuery.query, "Values:", sqlQuery.values);
+  const { query, values } = sqlResult;
+  console.log("🔍 Running Query:", query, "Values:", values);
 
-  // ✅ Fetch movies from backend using `/movies/fetchMovies`
+  // ✅ Fetch movies from backend
   try {
     const movieResponse = await fetch("/movies/fetchMovies", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: sqlQuery.query, values: sqlQuery.values })
+      body: JSON.stringify({ query, values })
     });
 
     if (!movieResponse.ok) {
@@ -73,28 +91,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const movies = await movieResponse.json();
-    if (movies.length === 0) {
+    if (!Array.isArray(movies) || movies.length === 0) {
       movieList.innerHTML = "<p>No movies found.</p>";
       return;
     }
 
     // ✅ Shuffle movies randomly
     movies.sort(() => Math.random() - 0.5);
-    printMovie(movies[0]);
 
+    // ✅ Récupérer les détails du premier film (y compris les acteurs)
+    const firstMovieDetails = await getMovieDetails(movies[0].ID);
+    if (firstMovieDetails) {
+      printMovie(firstMovieDetails);
+    }
+
+    // ✅ Stocker les résultats pour naviguer
+    movieResults = movies;
   } catch (error) {
     console.error("❌ Error fetching movies:", error);
   }
 });
 
-// ✅ Function to show movie details
-function displayMovieDetails(movie) {
-  printMovie(movie); // Calls printMovie() to display details
-}
 
-// ✅ Function to display movie details
-function printMovie(movieDetails) {
-  if (!movieDetails || !movieDetails.Title) {
+async function printMovie(movieDetails) {
+  if (!movieDetails || !movieDetails.title) {
     document.getElementById("movie-title").innerText = "Film non trouvé";
     return;
   }
@@ -106,139 +126,54 @@ function printMovie(movieDetails) {
     ? movieDetails.poster
     : defaultPoster;
 
-  document.getElementById("movie-title").innerText = movieDetails.Title;
+  document.getElementById("movie-title").innerText = movieDetails.title;
   document.getElementById("movie-poster").src = posterImg;
-  document.getElementById("movie-year").innerText = movieDetails.Year || "N/A";
-  document.getElementById("movie-director").innerText = movieDetails.Director || "Unknown";
-  document.getElementById("movie-runtime").innerText = movieDetails.Runtime || "N/A";
-  document.getElementById("movie-country").innerText = movieDetails.Country || "Unknown";
+  document.getElementById("movie-year").innerText = movieDetails.year || "N/A";
+  document.getElementById("movie-director").innerText = movieDetails.director || "Unknown";
+  document.getElementById("movie-runtime").innerText = movieDetails.runtime || "N/A";
+  document.getElementById("movie-country").innerText = movieDetails.country || "Unknown";
 
   const actorsContainer = document.getElementById("actors-container");
   actorsContainer.innerHTML = "";
 
-  movieDetails.Actors.split(",").forEach(actor => {
-    const actorDiv = document.createElement("div");
-    actorDiv.classList.add("actor");
+  if (movieDetails.actors.length > 0) {
+    movieDetails.actors.forEach(actor => {
+      const actorDiv = document.createElement("div");
+      actorDiv.classList.add("actor");
 
-    actorDiv.innerHTML = `
-            <img src="/img/actorPicturePlaceholder.jpg" alt="${actor.trim()}">
-            <p>${actor.trim()}</p>
-        `;
-    actorsContainer.appendChild(actorDiv);
-  });
-}
-
-
-let debounceTimer;
-
-async function showSuggestions(inputId, searchType, suggestionsId) {
-  clearTimeout(debounceTimer);
-
-  debounceTimer = setTimeout(async () => {
-    const query = document.getElementById(inputId).value.trim();
-    const selectedAward = document.getElementById("award")?.value.trim(); // ✅ Get selected award
-
-    if (query.length < 1) {
-      document.getElementById(suggestionsId).style.display = "none";
-      return;
-    }
-
-    try {
-      let fetchUrl = `/movies/search-suggestions?q=${encodeURIComponent(query)}&type=${encodeURIComponent(searchType)}`;
-
-      // ✅ If fetching categories, ensure the award name is passed
-      if (searchType === "category" && selectedAward) {
-        fetchUrl += `&award=${encodeURIComponent(selectedAward)}`;
-      }
-
-      console.log(`🔍 Fetching from: ${fetchUrl}`);
-      const response = await fetch(fetchUrl);
-
-      if (!response.ok) {
-        console.error(`❌ Server responded with ${response.status}`);
-        document.getElementById(suggestionsId).style.display = "none";
-        return;
-      }
-
-      const suggestions = await response.json();
-      if (!Array.isArray(suggestions) || suggestions.length === 0) {
-        document.getElementById(suggestionsId).style.display = "none";
-        return;
-      }
-
-      const suggestionsContainer = document.getElementById(suggestionsId);
-      suggestionsContainer.innerHTML = "";
-
-      suggestions.forEach(suggestion => {
-        let name = suggestion.AwardType || suggestion.Category || suggestion.Name || suggestion.name || suggestion.title;
-
-        if (!name) return;
-
-        const div = document.createElement("div");
-        div.classList.add("suggestion-item");
-        div.innerText = name;
-
-        div.onclick = () => {
-          document.getElementById(inputId).value = name;
-          suggestionsContainer.style.display = "none";
-
-          // ✅ If award is selected, trigger category suggestions
-          if (searchType === "award") {
-            console.log(`🔄 Fetching categories for selected award: ${name}`);
-            showSuggestions("category", "category", "suggestions-category");
-          }
-        };
-
-        suggestionsContainer.appendChild(div);
-      });
-
-      suggestionsContainer.style.display = "block";
-      console.log(`🎉 Suggestions for ${inputId} are now visible.`);
-    } catch (error) {
-      console.error("❌ Error fetching suggestions:", error);
-    }
-  }, 250);
-}
-
-
-
-function updateNavButtons() {
-  const prevButton = document.getElementById("prev-movie");
-  const nextButton = document.getElementById("next-movie");
-
-  if (movieResults.length <= 1) {
-    prevButton.classList.add("hidden");
-    nextButton.classList.add("hidden");
+      actorDiv.innerHTML = `
+              <img src="${actor.profilePath}" alt="${actor.name}">
+              <p>${actor.name}</p>
+          `;
+      actorsContainer.appendChild(actorDiv);
+    });
   } else {
-    prevButton.classList.remove("hidden");
-    nextButton.classList.remove("hidden");
-
-    if (currentMovieIndex === 0) {
-      prevButton.classList.add("hidden");
-    }
-    if (currentMovieIndex === movieResults.length - 1) {
-      nextButton.classList.add("hidden");
-    }
+    actorsContainer.innerHTML = "<p>No actors found.</p>";
   }
 }
 
-function nextMovie() {
+
+async function nextMovie() {
   if (currentMovieIndex < movieResults.length - 1) {
     currentMovieIndex++;
-    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
-    updateNavButtons();
+    const nextMovieDetails = await getMovieDetails(movieResults[currentMovieIndex].ID);
+    if (nextMovieDetails) {
+      printMovie(nextMovieDetails);
+    } else {
+      console.error("❌ No details found for next movie.");
+    }
   }
 }
 
-function prevMovie() {
+async function prevMovie() {
   if (currentMovieIndex > 0) {
     currentMovieIndex--;
-    getMovieDetails(movieResults[currentMovieIndex].ID).then(printMovie);
-    updateNavButtons();
+    const prevMovieDetails = await getMovieDetails(movieResults[currentMovieIndex].ID);
+    if (prevMovieDetails) {
+      printMovie(prevMovieDetails);
+    }
   }
 }
-
-
 
 
 document.addEventListener("click", (event) => {
@@ -250,6 +185,3 @@ document.addEventListener("click", (event) => {
     }
   });
 });
-
-
-

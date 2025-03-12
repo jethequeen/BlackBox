@@ -1,54 +1,58 @@
-const {FILTER_MAPPING} = require("./FilterMapping");
+const { FILTER_MAPPING } = require("./FilterMapping");
 
 function buildQuery(filters) {
-  let baseQuery = `
-    SELECT DISTINCT Films.ID, Films.Title, Films.Year
-    FROM Films
-  `;
-
-  let joins = new Set();
-  let conditions = [];
+  let queries = [];
   let values = [];
 
+
   if (filters.award && filters.category) {
-    joins.add(`
+
+    queries.push(`
+      SELECT Films.ID, Films.Title, Films.Year, RANDOM() as sort_order
+      FROM Films
       JOIN FilmAwards ON Films.ID = FilmAwards.FilmID
-      JOIN AwardCategories ON FilmAwards.CategoryID = AwardCategories.ID
-    `);
-    // Fix incorrect OR by grouping with parentheses
-    conditions.push(`
-      (FilmAwards.State = 'winner'
-      AND FilmAwards.CategoryID = (
-        SELECT ID FROM AwardCategories
-        WHERE AwardType = ?
-          AND Category = ?
-      ))
+      WHERE FilmAwards.State = 'winner'
+        AND EXISTS (
+          SELECT 1 FROM AwardCategories
+          WHERE AwardCategories.ID = FilmAwards.CategoryID
+            AND AwardCategories.AwardType = ?
+            AND AwardCategories.Category = ?
+        )
     `);
     values.push(filters.award, filters.category);
   }
 
-  if (filters.director) {
-    joins.add(`
-      JOIN FilmCrew ON Films.ID = FilmCrew.FilmID
-      JOIN Crew ON FilmCrew.CrewTMDB_ID = Crew.TMDB_ID
+  for (const [key, value] of Object.entries(filters)) {
+    if (!FILTER_MAPPING[key] || key === "award" || key === "category") continue; // Award & Category already handled
+
+    console.log(`✅ Applying Filter for ${key}:`, value);
+    const { join, column, condition } = FILTER_MAPPING[key];
+
+    let whereClause = `${column} = ?`;
+    if (condition) whereClause = `(${condition} AND ${whereClause})`;
+
+    queries.push(`
+      SELECT Films.ID, Films.Title, Films.Year, RANDOM() as sort_order
+      FROM Films
+      ${join}
+      WHERE ${whereClause}
     `);
-    conditions.push("Crew.Name = ?");
-    values.push(filters.director);
+    values.push(value);
   }
 
-  if (filters.cast) {
-    joins.add(`
-      JOIN FilmCast ON Films.ID = FilmCast.FilmID
-      JOIN "Cast" ON FilmCast.CastID = "Cast".TMDB_ID
-    `);
-    conditions.push('"Cast".Name = ?');
-    values.push(filters.cast);
+  if (queries.length === 0) {
+    console.log("⚠️ No filters applied. Returning empty query.");
+    return { query: "", values: [] };
   }
 
-  if (joins.size > 0) baseQuery += " " + Array.from(joins).join(" ");
-  if (conditions.length > 0) baseQuery += " WHERE " + conditions.join(" OR ");
+  // ✅ Combine Queries with UNION
+  let finalQuery = queries.join(" UNION ") + " ORDER BY sort_order";
 
-  return { query: baseQuery, values };
+  console.log("📜 Final Query to Execute:");
+  console.log(finalQuery);
+  console.log("📌 Query Values:", values);
+
+  return { query: finalQuery, values };
 }
 
 module.exports = { buildQuery };
