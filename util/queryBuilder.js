@@ -4,20 +4,18 @@ function buildQuery(filters) {
   let queries = [];
   let values = [];
 
-
   if (filters.award && filters.category) {
-
     queries.push(`
-      SELECT Films.ID, Films.Title, Films.Year, RANDOM() as sort_order
+      SELECT Films.ID, Films.Title, Films.Year
       FROM Films
-      JOIN FilmAwards ON Films.ID = FilmAwards.FilmID
+             JOIN FilmAwards ON Films.ID = FilmAwards.FilmID
       WHERE FilmAwards.State = 'winner'
         AND EXISTS (
-          SELECT 1 FROM AwardCategories
-          WHERE AwardCategories.ID = FilmAwards.CategoryID
-            AND AwardCategories.AwardType = ?
-            AND AwardCategories.Category = ?
-        )
+        SELECT 1 FROM AwardCategories
+        WHERE AwardCategories.ID = FilmAwards.CategoryID
+          AND AwardCategories.AwardType = ?
+          AND AwardCategories.Category = ?
+      )
     `);
     values.push(filters.award, filters.category);
   }
@@ -32,9 +30,9 @@ function buildQuery(filters) {
     if (condition) whereClause = `(${condition} AND ${whereClause})`;
 
     queries.push(`
-      SELECT Films.ID, Films.Title, Films.Year, RANDOM() as sort_order
+      SELECT Films.ID, Films.Title, Films.Year
       FROM Films
-      ${join}
+             ${join}
       WHERE ${whereClause}
     `);
     values.push(value);
@@ -45,8 +43,14 @@ function buildQuery(filters) {
     return { query: "", values: [] };
   }
 
-  // ✅ Combine Queries with UNION
-  let finalQuery = queries.join(" UNION ") + " ORDER BY sort_order";
+  // ✅ Ensure DISTINCT movies by wrapping UNION queries
+  let finalQuery = `
+    SELECT DISTINCT Films.ID, Films.Title, Films.Year
+    FROM (
+      ${queries.join(" UNION ")}
+    ) AS Films
+    ORDER BY RANDOM()
+  `;
 
   console.log("📜 Final Query to Execute:");
   console.log(finalQuery);

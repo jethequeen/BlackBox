@@ -8,31 +8,19 @@
 </head>
 <body>
 
-<div class="search-container">
-  <input type="text" id="search-bar" placeholder="Search by director or actor..."
-         oninput="showSuggestions('search-bar', 'crew', 'suggestions')">
-  <div id="suggestions" class="suggestions-dropdown"></div>
-
-  <select id="role-selector">
-    <option value="auto" selected>Auto</option>
-    <option value="actor">Actor</option>
-    <option value="director">Director</option>
-  </select>
-
-  <button id="random-movie-btn" onclick="fetchRandomMovie()">Get Random Movie</button>
-</div>
-
 
 <div class="movie-container">
-  <div id="movie-info">
-    <h1 id="movie-title">Search for a movie</h1>
+  <div id="loading-spinner" class="loading hidden"></div>
+  <p id="loading-text" class="loading-text hidden">Calculating, hold on!</p>
 
+
+  <div id="movie-info">
+    <h1 id="movie-title"></h1>
     <div class="poster-container">
       <button id="prev-movie" onclick="prevMovie()">⬅</button>
       <img id="movie-poster" src="/img/posterPlaceholder.jpg" alt="Movie Poster">
       <button id="next-movie" onclick="nextMovie()">➡</button>
     </div>
-
     <p>Year: <span id="movie-year"></span></p>
     <p>Director: <span id="movie-director"></span></p>
     <p>Runtime: <span id="movie-runtime"></span> min</p>
@@ -40,9 +28,7 @@
     <div id="actors-container"></div>
   </div>
 
-  <!-- ✅ Add this section to display search results -->
   <div id="movieList"></div>
-
 </div>
 
 

@@ -49,37 +49,45 @@ async function fetchAlgorithmParams() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const movieList = document.getElementById("movieList");
+  const loadingSpinner = document.getElementById("loading-spinner");
+  const loadingText = document.getElementById("loading-text");
+  const movieInfo = document.getElementById("movie-info");
 
   if (!movieList) {
     console.error("❌ Error: movieList element not found in movie.html.");
     return;
   }
 
-  // ✅ Fetch algorithm parameters
-  const parameters = await fetchAlgorithmParams();
-  if (!parameters) {
-    movieList.innerHTML = "<p>Error loading algorithm parameters.</p>";
-    return;
-  }
-
-  let filters = {};
-  parameters.forEach(param => {
-    filters[param.key] = param.value;
-  });
-
-  // ✅ Ensure `getSQLQuery()` is awaited properly
-  const sqlResult = await getSQLQuery(filters);
-  if (!sqlResult) {
-    console.error("❌ Error generating SQL query.");
-    movieList.innerHTML = "<p>Error generating SQL query.</p>";
-    return;
-  }
-
-  const { query, values } = sqlResult;
-  console.log("🔍 Running Query:", query, "Values:", values);
-
-  // ✅ Fetch movies from backend
   try {
+    // ✅ Show loading spinner and text
+    loadingSpinner.classList.remove("hidden");
+    loadingText.classList.remove("hidden");
+    movieInfo.classList.add("hidden");
+
+    // ✅ Fetch algorithm parameters
+    const parameters = await fetchAlgorithmParams();
+    if (!parameters) {
+      movieList.innerHTML = "<p>Error loading algorithm parameters.</p>";
+      return;
+    }
+
+    let filters = {};
+    parameters.forEach(param => {
+      filters[param.key] = param.value;
+    });
+
+    // ✅ Ensure `getSQLQuery()` is awaited properly
+    const sqlResult = await getSQLQuery(filters);
+    if (!sqlResult) {
+      console.error("❌ Error generating SQL query.");
+      movieList.innerHTML = "<p>Error generating SQL query.</p>";
+      return;
+    }
+
+    const { query, values } = sqlResult;
+    console.log("🔍 Running Query:", query, "Values:", values);
+
+    // ✅ Fetch movies from backend
     const movieResponse = await fetch("/movies/fetchMovies", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -109,9 +117,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     movieResults = movies;
   } catch (error) {
     console.error("❌ Error fetching movies:", error);
+  } finally {
+    // ✅ Hide loading spinner and text, show movie details
+    loadingSpinner.classList.add("hidden");
+    loadingText.classList.add("hidden");
+    movieInfo.classList.remove("hidden");
   }
 });
-
 
 async function printMovie(movieDetails) {
   if (!movieDetails || !movieDetails.title) {
@@ -152,7 +164,6 @@ async function printMovie(movieDetails) {
   }
 }
 
-
 async function nextMovie() {
   if (currentMovieIndex < movieResults.length - 1) {
     currentMovieIndex++;
@@ -174,7 +185,6 @@ async function prevMovie() {
     }
   }
 }
-
 
 document.addEventListener("click", (event) => {
   const allSuggestions = document.querySelectorAll(".suggestions-dropdown");
