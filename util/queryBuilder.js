@@ -21,9 +21,8 @@ function buildQuery(filters) {
   }
 
   for (const [key, value] of Object.entries(filters)) {
-    if (!FILTER_MAPPING[key] || key === "award" || key === "category") continue; // Award & Category already handled
+    if (!FILTER_MAPPING[key] || key === "award" || key === "category") continue;
 
-    console.log(`✅ Applying Filter for ${key}:`, value);
     const { join, column, condition } = FILTER_MAPPING[key];
 
     let whereClause = `${column} = ?`;
@@ -39,22 +38,15 @@ function buildQuery(filters) {
   }
 
   if (queries.length === 0) {
-    console.log("⚠️ No filters applied. Returning empty query.");
     return { query: "", values: [] };
   }
 
-  // ✅ Ensure DISTINCT movies by wrapping UNION queries
   let finalQuery = `
     SELECT DISTINCT Films.ID, Films.Title, Films.Year
     FROM (
       ${queries.join(" UNION ")}
     ) AS Films
-    ORDER BY RANDOM()
-  `;
-
-  console.log("📜 Final Query to Execute:");
-  console.log(finalQuery);
-  console.log("📌 Query Values:", values);
+    ORDER BY RANDOM()`;
 
   return { query: finalQuery, values };
 }

@@ -1,6 +1,7 @@
 // ✅ Fix: Define `currentMovieIndex`
 let currentMovieIndex = 0;
 let movieResults = [];
+let debounceTimer ;
 
 async function getSQLQuery(filters) {
   try {
@@ -53,18 +54,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loadingText = document.getElementById("loading-text");
   const movieInfo = document.getElementById("movie-info");
 
-  if (!movieList) {
-    console.error("❌ Error: movieList element not found in movie.html.");
-    return;
-  }
-
   try {
-    // ✅ Show loading spinner and text
     loadingSpinner.classList.remove("hidden");
     loadingText.classList.remove("hidden");
     movieInfo.classList.add("hidden");
 
-    // ✅ Fetch algorithm parameters
     const parameters = await fetchAlgorithmParams();
     if (!parameters) {
       movieList.innerHTML = "<p>Error loading algorithm parameters.</p>";
@@ -103,22 +97,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       movieList.innerHTML = "<p>No movies found.</p>";
       return;
     }
-
-    // ✅ Shuffle movies randomly
     movies.sort(() => Math.random() - 0.5);
 
-    // ✅ Récupérer les détails du premier film (y compris les acteurs)
     const firstMovieDetails = await getMovieDetails(movies[0].ID);
     if (firstMovieDetails) {
       printMovie(firstMovieDetails);
     }
-
-    // ✅ Stocker les résultats pour naviguer
     movieResults = movies;
+    updateNavButtons();
   } catch (error) {
     console.error("❌ Error fetching movies:", error);
   } finally {
-    // ✅ Hide loading spinner and text, show movie details
     loadingSpinner.classList.add("hidden");
     loadingText.classList.add("hidden");
     movieInfo.classList.remove("hidden");
@@ -173,6 +162,7 @@ async function nextMovie() {
     } else {
       console.error("❌ No details found for next movie.");
     }
+    updateNavButtons();
   }
 }
 
@@ -183,8 +173,94 @@ async function prevMovie() {
     if (prevMovieDetails) {
       printMovie(prevMovieDetails);
     }
+    updateNavButtons();
   }
 }
+
+async function showSuggestions(inputId, searchType, suggestionsId) {
+  clearTimeout(debounceTimer);
+
+  debounceTimer = setTimeout(async () => {
+    const query = document.getElementById(inputId).value.trim();
+    const selectedAward = document.getElementById("award")?.value.trim();
+    if (query.length < 1) {
+      document.getElementById(suggestionsId).style.display = "none";
+      return;
+    }
+
+    try {
+      let fetchUrl = `/movies/search-suggestions?q=${encodeURIComponent(query)}&type=${encodeURIComponent(searchType)}`;
+
+      if (searchType === "category" && selectedAward) {
+        fetchUrl += `&award=${encodeURIComponent(selectedAward)}`;
+      }
+
+      console.log(`🔍 Fetching from: ${fetchUrl}`);
+      const response = await fetch(fetchUrl);
+
+      if (!response.ok) {
+        console.error(`❌ Server responded with ${response.status}`);
+        document.getElementById(suggestionsId).style.display = "none";
+        return;
+      }
+      const suggestions = await response.json();
+      if (!Array.isArray(suggestions) || suggestions.length === 0) {
+        document.getElementById(suggestionsId).style.display = "none";
+        return;
+      }
+
+      const suggestionsContainer = document.getElementById(suggestionsId);
+      suggestionsContainer.innerHTML = "";
+
+      suggestions.forEach(suggestion => {
+        let name = suggestion.AwardType || suggestion.Category || suggestion.Name || suggestion.name || suggestion.title;
+
+        if (!name) return;
+
+        const div = document.createElement("div");
+        div.classList.add("suggestion-item");
+        div.innerText = name;
+
+        div.onclick = () => {
+          document.getElementById(inputId).value = name;
+          suggestionsContainer.style.display = "none";
+
+          if (searchType === "award") {
+            console.log(`🔄 Fetching categories for selected award: ${name}`);
+            showSuggestions("category", "category", "suggestions-category");
+          }
+        };
+
+        suggestionsContainer.appendChild(div);
+      });
+
+      suggestionsContainer.style.display = "block";
+      console.log(`🎉 Suggestions for ${inputId} are now visible.`);
+    } catch (error) {
+      console.error("❌ Error fetching suggestions:", error);
+    }
+  }, 250);
+}
+
+
+
+function updateNavButtons() {
+  const prevButton = document.getElementById("prev-movie");
+  const nextButton = document.getElementById("next-movie");
+
+  // Hide both buttons if there's only one or no movie
+  if (movieResults.length <= 1) {
+    prevButton.style.display = "none";
+    nextButton.style.display = "none";
+    return;
+  }
+
+  // Toggle visibility based on the current index
+  prevButton.style.display = currentMovieIndex > 0 ? "block" : "none";
+  nextButton.style.display = currentMovieIndex < movieResults.length - 1 ? "block" : "none";
+}
+
+
 
 document.addEventListener("click", (event) => {
   const allSuggestions = document.querySelectorAll(".suggestions-dropdown");

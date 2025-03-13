@@ -1,10 +1,11 @@
 // Get the container element where you want to display the buttons
 const algorithmButtonsContainer = document.getElementById('algorithmButtonsContainer');
 const newAlgorithmButton = document.getElementById('newAlgorithmButton');
-
 newAlgorithmButton.addEventListener('click', () => {
   window.location.href = '../template.html';
 })
+
+
 
 // Function to create a button element
 function createAlgorithmButton(algorithmName, algorithmId) {

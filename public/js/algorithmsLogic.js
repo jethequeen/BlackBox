@@ -77,5 +77,7 @@ function createAlgorithm() {
       console.error("Error:", error.message);
       alert("Error saving algorithm: " + error.message);
     });
+
+  window.location.href = "/";
 }
 

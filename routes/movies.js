@@ -20,14 +20,12 @@ router.post("/build-query", (req, res) => {
 
 router.get("/search-suggestions", (req, res) => {
   let { q, type, award } = req.query;
-
   let sqlQuery = searchQueryMap[type];
   let params = [`%${q}%`];
 
-  // ✅ If fetching categories, filter by the selected award
   if (type === "category" && award) {
     sqlQuery = searchQueryMap.category;
-    params = [award]; // Pass award name exactly
+    params = [award, `%${q}%`];
   }
 
   console.log(`🔹 Running Query: ${sqlQuery}, Params: ${params}`);
