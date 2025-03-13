@@ -14,7 +14,7 @@ async function authenticateUser(req, res, next) {
 
   try {
     const session = await new Promise((resolve, reject) => {
-      global.db.get("SELECT * FROM Sessions WHERE SessionID = ? AND Expiry > CURRENT_TIMESTAMP",
+      db.get("SELECT * FROM Sessions WHERE SessionID = ? AND Expiry > CURRENT_TIMESTAMP",
         [token], (err, row) => (err ? reject(err) : resolve(row))
       );
     });
@@ -24,7 +24,7 @@ async function authenticateUser(req, res, next) {
     }
 
     req.user = await new Promise((resolve, reject) => {
-      global.db.get("SELECT * FROM Accounts WHERE AccountID = ?", [session.AccountID],
+      db.get("SELECT * FROM Accounts WHERE AccountID = ?", [session.AccountID],
         (err, row) => err ? reject(err) : resolve(row)
       );
     });

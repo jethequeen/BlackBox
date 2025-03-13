@@ -5,7 +5,6 @@ function buildQuery(filters, accountID) {
   let queries = [];
   let values = [];
 
-
   if (filters.award && filters.category) {
     queries.push(`
       SELECT Films.ID, Films.Title, Films.Year
@@ -50,8 +49,6 @@ function buildQuery(filters, accountID) {
            ${queries.join(" UNION ")}
            ) AS Films
     ORDER BY RANDOM()`;
-  console.log("🛠️ Final SQL Query:", finalQuery);
-  console.log("🔢 Query Values (Before Execution):", values);
 
   return { query: finalQuery, values };
 }

@@ -8,7 +8,8 @@ const app = express();
 const PORT = 3000;
 
 
-global.db = new sqlite3.Database(path.join(__dirname, "DB.sqlite"), (err) => {
+
+const db = global.db = new sqlite3.Database(path.join(__dirname, "DB.sqlite"), (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
   } else {
@@ -16,7 +17,7 @@ global.db = new sqlite3.Database(path.join(__dirname, "DB.sqlite"), (err) => {
   }
 });
 
-global.db.run("PRAGMA journal_mode=WAL;");
+db.run("PRAGMA journal_mode=WAL;");
 
 
 

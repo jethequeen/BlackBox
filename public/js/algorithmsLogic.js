@@ -2,12 +2,9 @@
 async function getAlgorithmsFromAccount() {
   try {
     const response = await fetch("/algorithm/getAlgorithms");
-    if (!response.ok) {
-      throw new Error("Failed to fetch algorithms");
-    }
+
     return await response.json();
   } catch (error) {
-    console.error("❌ Error fetching algorithms:", error);
     return [];
   }
 }
@@ -56,19 +53,15 @@ function createAlgorithm() {
   })
     .then(response => response.text())
     .then(text => {
-      console.log("🔹 Raw Response:", text);
       try {
         return JSON.parse(text);
       } catch (err) {
-        throw new Error("Invalid JSON received from server");
       }
     })
     .then(data => {
-      console.log("✅ Server Response:", data);
       alert("Algorithm saved!");
     })
     .catch(error => {
-      console.error("Error:", error.message);
       alert("Error saving algorithm: " + error.message);
     });
 

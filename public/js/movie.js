@@ -1,4 +1,3 @@
-// ✅ Fix: Define `currentMovieIndex`
 let currentMovieIndex = 0;
 let movieResults = [];
 let debounceTimer ;
@@ -12,15 +11,8 @@ async function getSQLQuery(filters) {
       body: JSON.stringify({ filters }),
     });
 
-    if (!response.ok) {
-      throw new Error(`❌ API Error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log("✅ Generated SQL Query:", data.query, "Values:", data.values);
-    return data;
+    return await response.json();
   } catch (error) {
-    console.error("❌ Error fetching query:", error);
     return null;
   }
 }
@@ -36,7 +28,7 @@ async function fetchAlgorithmParams() {
     const response = await fetch(`/algorithm/getAlgorithmParams?algorithmID=${selectedAlgorithmID}`);
 
     if (!response.ok) {
-      console.error(`❌ API Error: ${response.status} ${response.statusText}`);
+      console.error(`API Error: ${response.status} ${response.statusText}`);
       return null;
     }
 
@@ -44,7 +36,6 @@ async function fetchAlgorithmParams() {
     console.log("🔍 Algorithm Parameters:", data);
     return data;
   } catch (error) {
-    console.error("❌ Error fetching algorithm parameters:", error);
     return null;
   }
 }
@@ -61,10 +52,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     movieInfo.classList.add("hidden");
 
     const parameters = await fetchAlgorithmParams();
-    if (!parameters) {
-      movieList.innerHTML = "<p>Error loading algorithm parameters.</p>";
-      return;
-    }
 
     let filters = {};
     parameters.forEach(param => {
@@ -73,24 +60,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sqlResult = await getSQLQuery(filters);
     if (!sqlResult) {
-      console.error("❌ Error generating SQL query.");
       movieList.innerHTML = "<p>Error generating SQL query.</p>";
       return;
     }
 
     const { query, values } = sqlResult;
-    console.log("🔍 Running Query:", query, "Values:", values);
-
-    // ✅ Fetch movies from backend
     const movieResponse = await fetch("/movies/fetchMovies", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, values })
     });
-
-    if (!movieResponse.ok) {
-      throw new Error(`HTTP error! Status: ${movieResponse.status}`);
-    }
 
     const movies = await movieResponse.json();
     if (!Array.isArray(movies) || movies.length === 0) {
@@ -101,12 +80,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const firstMovieDetails = await getMovieDetails(movies[0].ID);
     if (firstMovieDetails) {
-      printMovie(firstMovieDetails);
+      await printMovie(firstMovieDetails);
     }
     movieResults = movies;
     updateNavButtons();
   } catch (error) {
-    console.error("❌ Error fetching movies:", error);
+    console.error("Error fetching movies:", error);
   } finally {
     loadingSpinner.classList.add("hidden");
     loadingText.classList.add("hidden");
@@ -119,8 +98,6 @@ async function printMovie(movieDetails) {
     document.getElementById("movie-title").innerText = "Film non trouvé";
     return;
   }
-
-  console.log("🎬 Displaying movie:", movieDetails);
 
   const defaultPoster = "/img/posterPlaceholder.jpg";
   const posterImg = movieDetails.poster && !movieDetails.poster.includes("null")
@@ -158,7 +135,7 @@ async function nextMovie() {
     currentMovieIndex++;
     const nextMovieDetails = await getMovieDetails(movieResults[currentMovieIndex].ID);
     if (nextMovieDetails) {
-      printMovie(nextMovieDetails);
+      await printMovie(nextMovieDetails);
     } else {
       console.error("❌ No details found for next movie.");
     }
@@ -171,7 +148,7 @@ async function prevMovie() {
     currentMovieIndex--;
     const prevMovieDetails = await getMovieDetails(movieResults[currentMovieIndex].ID);
     if (prevMovieDetails) {
-      printMovie(prevMovieDetails);
+      await printMovie(prevMovieDetails);
     }
     updateNavButtons();
   }
@@ -183,11 +160,11 @@ async function showSuggestions(inputId, searchType, suggestionsId) {
   debounceTimer = setTimeout(async () => {
     const query = document.getElementById(inputId).value.trim();
     const selectedAward = document.getElementById("award")?.value.trim();
+
     if (query.length < 1) {
       document.getElementById(suggestionsId).style.display = "none";
       return;
     }
-
     try {
       let fetchUrl = `/movies/search-suggestions?q=${encodeURIComponent(query)}&type=${encodeURIComponent(searchType)}`;
 
@@ -195,14 +172,8 @@ async function showSuggestions(inputId, searchType, suggestionsId) {
         fetchUrl += `&award=${encodeURIComponent(selectedAward)}`;
       }
 
-      console.log(`🔍 Fetching from: ${fetchUrl}`);
       const response = await fetch(fetchUrl);
 
-      if (!response.ok) {
-        console.error(`❌ Server responded with ${response.status}`);
-        document.getElementById(suggestionsId).style.display = "none";
-        return;
-      }
       const suggestions = await response.json();
       if (!Array.isArray(suggestions) || suggestions.length === 0) {
         document.getElementById(suggestionsId).style.display = "none";
@@ -214,9 +185,7 @@ async function showSuggestions(inputId, searchType, suggestionsId) {
 
       suggestions.forEach(suggestion => {
         let name = suggestion.AwardType || suggestion.Category || suggestion.Name || suggestion.name || suggestion.title;
-
         if (!name) return;
-
         const div = document.createElement("div");
         div.classList.add("suggestion-item");
         div.innerText = name;
@@ -226,36 +195,26 @@ async function showSuggestions(inputId, searchType, suggestionsId) {
           suggestionsContainer.style.display = "none";
 
           if (searchType === "award") {
-            console.log(`🔄 Fetching categories for selected award: ${name}`);
-            showSuggestions("category", "category", "suggestions-category");
+            showSuggestions("category", "category",
+              "suggestions-category");
           }
         };
-
         suggestionsContainer.appendChild(div);
       });
-
       suggestionsContainer.style.display = "block";
-      console.log(`🎉 Suggestions for ${inputId} are now visible.`);
     } catch (error) {
-      console.error("❌ Error fetching suggestions:", error);
     }
   }, 250);
 }
 
-
-
 function updateNavButtons() {
   const prevButton = document.getElementById("prev-movie");
   const nextButton = document.getElementById("next-movie");
-
-  // Hide both buttons if there's only one or no movie
   if (movieResults.length <= 1) {
     prevButton.style.display = "none";
     nextButton.style.display = "none";
     return;
   }
-
-  // Toggle visibility based on the current index
   prevButton.style.display = currentMovieIndex > 0 ? "block" : "none";
   nextButton.style.display = currentMovieIndex < movieResults.length - 1 ? "block" : "none";
 }
