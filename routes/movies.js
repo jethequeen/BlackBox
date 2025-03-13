@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { buildQuery } = require("../util/queryBuilder");
 const {searchQueryMap} = require("../util/FilterMapping");
+const { processRSS } = require("../util/letterboxdRSS");
 
 router.post("/build-query", (req, res) => {
   const sessionToken = req.cookies.sessionToken;
@@ -40,17 +41,22 @@ router.post("/fetchMovies", (req, res) => {
     return res.status(400).json({ error: "Invalid query parameters." });
   }
 
-  console.log("Executing SQL Query:", query);
-  console.log("Query Values:", values);
-
   db.all(query, values, (err, rows) => {
-    if (err) {
-      console.error("Database Execution Error:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
     res.json(rows);
   });
 });
+
+router.get('/test-rss', async (req, res) => {
+  try {
+    await processRSS();
+    res.json({ message: 'RSS feed processed' });
+  } catch (error) {
+    console.error('❌ Error processing RSS:', error); // Log error details
+    res.status(500).json({ error: error.message || 'Unknown error processing RSS' });
+  }
+});
+
+
 
 
 

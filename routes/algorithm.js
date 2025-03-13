@@ -3,12 +3,8 @@ const {buildQuery} = require("../util/queryBuilder");
 const router = express.Router();
 
 router.post("/saveAlgorithm", (req, res) => {
-  console.log("🔹 Received POST request to /algorithm/saveAlgorithm");
-  console.log("🔹 Request Body:", JSON.stringify(req.body, null, 2)); // Debugging JSON input
   let query = req.body;
-
   const sessionToken = req.cookies.sessionToken;
-  console.log("🔹 Extracted sessionToken from cookies:", sessionToken);
 
   if (!sessionToken) {
     return res.status(401).json({ error: "User not authenticated (no sessionToken found)" });
@@ -21,7 +17,7 @@ router.post("/saveAlgorithm", (req, res) => {
       const AccountID = row.AccountID;
 
       db.run(
-        "INSERT INTO Algorithms (user_id, name) VALUES (?, ?)", // Change user_id → AccountID
+        "INSERT INTO Algorithms (user_id, name) VALUES (?, ?)",
         [AccountID, query.name],
         function () {
 
@@ -46,7 +42,6 @@ router.post("/saveAlgorithm", (req, res) => {
           Promise.all(paramPromises)
             .then(() => res.json({success: true, id: algorithmId}))
             .catch(error => {
-              console.error("❌ Promise error:", error.message);
               res.status(500).json({error: error.message});
             });
         }
