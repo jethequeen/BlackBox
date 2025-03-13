@@ -32,9 +32,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     document.getElementById("logoutButton").addEventListener("click", () => {
-      fetch("/auth/logout", { method: "POST", credentials: "include" })
-        .then(() => (window.location.href = "/login.html"))
-        .catch((error) => console.error("Logout failed:", error));
+      fetch("/auth/logout", {
+        method: "POST",
+        credentials: "include" // Ensures cookies are sent with the request
+      })
+        .then(response => response.json()) // Convert response to JSON
+        .then(data => {
+          console.log("✅ Logout successful:", data.message);
+
+          // Clear localStorage
+          localStorage.clear(); // Clears all localStorage data
+          sessionStorage.clear(); // Also clear sessionStorage if needed
+
+          // Redirect to login page
+          window.location.href = data.redirect;
+        })
+        .catch(error => console.error("❌ Logout failed:", error));
     });
   }
 });

@@ -31,10 +31,14 @@ const movieRoutes = require("./routes/movies");
 const algorithmRoutes = require("./routes/algorithm");
 const { authenticateUser } = require("./middleware/authMiddleware");
 
+// ✅ Public routes (auth should not require authentication)
 app.use("/auth", authRoutes);
+
+// ✅ Apply authentication only after login/signup routes
+app.use(authenticateUser);
+
 app.use("/movies", movieRoutes);
 app.use("/algorithm", algorithmRoutes);
-app.use(authenticateUser);
 
 app.get("/", (req, res) => {
   if (req.cookies.sessionToken) {

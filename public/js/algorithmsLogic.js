@@ -12,12 +12,6 @@ async function getAlgorithmsFromAccount() {
   }
 }
 
-function setSelectedAlgorithm(algorithmId) {
-  localStorage.setItem('selectedAlgorithm', algorithmId);
-}
-
-
-
 
 
 function createAlgorithm() {

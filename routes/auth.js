@@ -125,7 +125,7 @@ router.post("/logout", async (req, res) => {
   }
 
   res.clearCookie("sessionToken");
-  res.redirect("/login.html");
+  res.json({ message: "Logout successful", redirect: "/login.html" });
 });
 
 module.exports = router;
