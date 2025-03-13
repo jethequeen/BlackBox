@@ -4,6 +4,7 @@ let movieResults = [];
 let debounceTimer ;
 
 async function getSQLQuery(filters) {
+
   try {
     const response = await fetch("/movies/build-query", {
       method: "POST",
@@ -70,7 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       filters[param.key] = param.value;
     });
 
-    // ✅ Ensure `getSQLQuery()` is awaited properly
     const sqlResult = await getSQLQuery(filters);
     if (!sqlResult) {
       console.error("❌ Error generating SQL query.");

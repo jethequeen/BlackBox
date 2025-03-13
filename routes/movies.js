@@ -4,16 +4,35 @@ const {FILTER_MAPPING, searchQueryMap} = require("../util/FilterMapping");
 const { buildQuery } = require("../util/queryBuilder");
 
 router.post("/build-query", (req, res) => {
-  try {
-    const filters = req.body.filters; // Frontend sends filters
-    const { query, values } = buildQuery(filters);
+  const sessionToken = req.cookies.sessionToken;
 
-    res.json({ query, values });
-  } catch (error) {
-    console.error("❌ Error building query:", error);
-    res.status(500).json({ error: "Failed to generate query." });
-  }
+  global.db.get("SELECT AccountID FROM Sessions WHERE SessionID = ?", [sessionToken], (err, row) => {
+    if (err) {
+      console.error("❌ Error retrieving AccountID:", err.message);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (!row) {
+      console.error("❌ Invalid session token");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const accountID = row.AccountID;
+    console.log("✅ AccountID Retrieved:", accountID);
+
+    try {
+      const filters = req.body.filters;
+      const { query, values } = buildQuery(filters, accountID);
+
+      console.log("🔍 Final Query Values (Before Execution):", values);
+      res.json({ query, values });
+    } catch (error) {
+      console.error("❌ Error building query:", error);
+      res.status(500).json({ error: "Failed to generate query." });
+    }
+  });
 });
+
 
 
 

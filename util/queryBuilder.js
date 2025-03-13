@@ -1,8 +1,10 @@
 const { FILTER_MAPPING } = require("./FilterMapping");
 
-function buildQuery(filters) {
+function buildQuery(filters, accountID) {
+
   let queries = [];
   let values = [];
+
 
   if (filters.award && filters.category) {
     queries.push(`
@@ -16,15 +18,15 @@ function buildQuery(filters) {
           AND AwardCategories.AwardType = ?
           AND AwardCategories.Category = ?
       )
+        AND Films.ID NOT IN (SELECT TMDB_ID FROM FilmsWatched WHERE AccountID = ?)
     `);
-    values.push(filters.award, filters.category);
+    values.push(filters.award, filters.category, accountID);
   }
 
   for (const [key, value] of Object.entries(filters)) {
     if (!FILTER_MAPPING[key] || key === "award" || key === "category") continue;
 
     const { join, column, condition } = FILTER_MAPPING[key];
-
     let whereClause = `${column} = ?`;
     if (condition) whereClause = `(${condition} AND ${whereClause})`;
 
@@ -33,8 +35,9 @@ function buildQuery(filters) {
       FROM Films
              ${join}
       WHERE ${whereClause}
+        AND Films.ID NOT IN (SELECT TMDB_ID FROM FilmsWatched WHERE AccountID = ?)
     `);
-    values.push(value);
+    values.push(value, accountID);
   }
 
   if (queries.length === 0) {
@@ -44,9 +47,11 @@ function buildQuery(filters) {
   let finalQuery = `
     SELECT DISTINCT Films.ID, Films.Title, Films.Year
     FROM (
-      ${queries.join(" UNION ")}
-    ) AS Films
+           ${queries.join(" UNION ")}
+           ) AS Films
     ORDER BY RANDOM()`;
+  console.log("🛠️ Final SQL Query:", finalQuery);
+  console.log("🔢 Query Values (Before Execution):", values);
 
   return { query: finalQuery, values };
 }
